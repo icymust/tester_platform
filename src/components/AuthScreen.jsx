@@ -1,6 +1,8 @@
 import {
   BriefcaseBusiness,
   Check,
+  Building2,
+  FlaskConical,
   ShieldCheck,
   UserRound,
 } from "lucide-react";
@@ -30,11 +32,6 @@ export function AuthScreen({
           Clients publish testing tasks, QA testers apply, and the client chooses
           the best candidate from the dashboard.
         </p>
-        <div className="hero-metrics">
-          <Metric value="2" label="roles" />
-          <Metric value="5 min" label="to first application" />
-          <Metric value="MVP" label="hackathon ready" />
-        </div>
       </section>
 
       <section className="auth-panel">
@@ -72,14 +69,14 @@ export function AuthScreen({
                     onClick={() => onRoleChange("tester")}
                     type="button"
                   >
-                    <UserRound size={18} /> Tester
+                    <FlaskConical size={18} /> Tester
                   </button>
                   <button
                     className={role === "client" ? "active" : ""}
                     onClick={() => onRoleChange("client")}
                     type="button"
                   >
-                    <BriefcaseBusiness size={18} /> Client
+                    <Building2 size={18} /> Client
                   </button>
                 </div>
               </div>

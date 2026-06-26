@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AppHeader } from "./components/AppHeader.jsx";
 import { AuthScreen } from "./components/AuthScreen.jsx";
+import { LandingPage } from "./components/LandingPage.jsx";
 import {
   AccountSettingsModal,
   ClientDashboard,
@@ -98,6 +99,17 @@ function App() {
   }, [currentUser, currentUserId]);
 
   useEffect(() => {
+    if (!currentUser) return;
+
+    const isPlatformRoute = routePath === "/platform" || routePath.startsWith("/platform/");
+    const isProfileRoute = routePath.startsWith("/profiles/");
+    if (isPlatformRoute || isProfileRoute) return;
+
+    window.history.replaceState({}, "", "/platform");
+    setRoutePath("/platform");
+  }, [currentUser, routePath]);
+
+  useEffect(() => {
     function handlePopState() {
       setRoutePath(getRoutePath());
     }
@@ -129,6 +141,8 @@ function App() {
           education: found.education || "",
           certificates: found.certificates || "",
         });
+        window.history.pushState({}, "", "/platform");
+        setRoutePath("/platform");
       } else {
         setAuthError("Account not found. Check your username and password.");
       }
@@ -162,6 +176,8 @@ function App() {
     setCurrentUserId(newUser.id);
     saveSession(newUser.id);
     setProfileForm({ experience: "", skills: "", education: "", certificates: "" });
+    window.history.pushState({}, "", "/platform");
+    setRoutePath("/platform");
   }
 
   function updateProfile(event) {
@@ -466,20 +482,48 @@ function App() {
     setCurrentUserId("");
     clearSession();
     setAuthForm({ name: "", login: "", password: "" });
+    window.history.pushState({}, "", "/");
+    setRoutePath("/");
   }
 
   if (!currentUser) {
+    if (routePath.startsWith("/auth")) {
+      return (
+        <AuthScreen
+          authError={authError}
+          authForm={authForm}
+          authMode={authMode}
+          onAuth={handleAuth}
+          onAuthErrorClear={() => setAuthError("")}
+          onAuthFormChange={setAuthForm}
+          onAuthModeChange={setAuthMode}
+          onRoleChange={setRole}
+          role={role}
+          onGoHome={() => {
+            window.history.pushState({}, "", "/");
+            setRoutePath("/");
+          }}
+        />
+      );
+    }
+
     return (
-      <AuthScreen
-        authError={authError}
-        authForm={authForm}
-        authMode={authMode}
-        onAuth={handleAuth}
-        onAuthErrorClear={() => setAuthError("")}
-        onAuthFormChange={setAuthForm}
-        onAuthModeChange={setAuthMode}
-        onRoleChange={setRole}
-        role={role}
+      <LandingPage
+        onOpenAuth={(mode) => {
+          setAuthMode(mode || "login");
+          window.history.pushState({}, "", "/auth");
+          setRoutePath("/auth");
+        }}
+        onOpenRegister={() => {
+          setAuthMode("register");
+          window.history.pushState({}, "", "/auth");
+          setRoutePath("/auth");
+        }}
+        onOpenSignIn={() => {
+          setAuthMode("login");
+          window.history.pushState({}, "", "/auth");
+          setRoutePath("/auth");
+        }}
       />
     );
   }

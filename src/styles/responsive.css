@@ -1,5 +1,6 @@
 @media (max-width: 980px) {
   .auth-shell,
+  .landing-hero,
   .dashboard-grid,
   .client-dashboard,
   .tester-dashboard {
@@ -98,6 +99,24 @@
 
   .hero {
     min-height: 58vh;
+  }
+
+  .auth-hero {
+    min-height: 52vh;
+  }
+
+  .landing-topbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .landing-topbar-actions {
+    width: 100%;
+  }
+
+  .landing-topbar-actions .primary-button,
+  .landing-topbar-actions .secondary-button {
+    flex: 1 1 0;
   }
 }
 
@@ -208,6 +227,73 @@
 
   .auth-panel {
     padding: 24px 16px;
+  }
+
+  .auth-card {
+    width: 100%;
+    gap: 18px;
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .auth-role-grid,
+  .auth-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-hero-copy {
+    margin-top: 28px;
+  }
+
+  .auth-hero-copy p {
+    font-size: 16px;
+  }
+
+  .auth-header p {
+    font-size: 16px;
+  }
+
+  .landing-shell {
+    padding: 10px;
+  }
+
+  .landing-copy,
+  .landing-panel {
+    padding: 18px;
+  }
+
+  .landing-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-topbar-actions {
+    flex-direction: column;
+  }
+
+  .landing-topbar-actions .primary-button,
+  .landing-topbar-actions .secondary-button {
+    width: 100%;
+  }
+
+  .auth-hero,
+  .auth-panel {
+    padding: 18px 14px;
+  }
+
+  .auth-brand {
+    font-size: 16px;
+  }
+
+  .auth-hero-copy h1 {
+    font-size: 34px;
+  }
+
+  .auth-points {
+    gap: 12px;
+  }
+
+  .auth-points li {
+    font-size: 14px;
   }
 
   .segmented {
