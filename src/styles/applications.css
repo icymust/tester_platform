@@ -1,0 +1,482 @@
+.applications-modal {
+  padding: 0;
+}
+
+.applications-modal > .modal-header {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  margin: 0;
+}
+
+.applications-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  min-height: min(82vh, 780px);
+  background: #ffffff;
+}
+
+.applications-nav {
+  display: grid;
+  gap: 8px;
+}
+
+.applications-nav button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: transparent;
+  color: #344353;
+  font-weight: 800;
+  text-align: left;
+}
+
+.applications-nav button.active,
+.applications-nav button:hover {
+  background: #f0ecff;
+  color: #174ea6;
+}
+
+.applications-center {
+  min-width: 0;
+  padding: 34px;
+  background: #ffffff;
+}
+
+.applications-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.applications-heading h2 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.applications-metrics {
+  display: flex;
+  gap: 10px;
+}
+
+.metric-mini {
+  min-width: 112px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #f7fafc;
+}
+
+.metric-mini strong,
+.metric-mini span {
+  display: block;
+}
+
+.metric-mini strong {
+  color: #17212b;
+  font-size: 20px;
+}
+
+.metric-mini span {
+  margin-top: 3px;
+  color: #667789;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.applications-list-panel {
+  padding: 18px;
+  border: 1px solid #dce5ee;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.applications-tabs {
+  display: flex;
+  gap: 18px;
+  border-bottom: 1px solid #e5edf4;
+}
+
+.applications-tabs button {
+  min-height: 44px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #536271;
+  font-weight: 900;
+}
+
+.applications-tabs button.active {
+  border-color: #174ea6;
+  color: #174ea6;
+}
+
+.applications-tools {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto auto;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.applications-search {
+  position: relative;
+}
+
+.applications-search svg {
+  position: absolute;
+  left: 13px;
+  top: 13px;
+  color: #667789;
+}
+
+.applications-search input {
+  padding-left: 40px;
+}
+
+.applications-tools select {
+  min-height: 44px;
+  border: 1px solid #d4dee8;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #ffffff;
+  color: #344353;
+  font-weight: 800;
+}
+
+.candidate-list {
+  display: grid;
+  gap: 12px;
+}
+
+.candidate-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 86px 110px auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.candidate-row.active,
+.candidate-row:hover {
+  border-color: #c9bdf7;
+  box-shadow: 0 12px 30px rgba(23, 33, 43, 0.06);
+}
+
+.candidate-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.candidate-title strong {
+  font-size: 18px;
+}
+
+.candidate-main p,
+.candidate-main span {
+  margin: 4px 0 0;
+  color: #536271;
+  font-size: 13px;
+}
+
+.tag,
+.application-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  border-radius: 999px;
+  padding: 0 9px;
+  background: #f0ecff;
+  color: #5336d6;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.tag.success,
+.application-badge.selected {
+  background: #e8f6f1;
+  color: #178065;
+}
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #9a5b00;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.candidate-stat {
+  border-left: 1px solid #e5edf4;
+  padding-left: 14px;
+}
+
+.candidate-stat span,
+.candidate-stat strong {
+  display: block;
+}
+
+.candidate-stat span {
+  color: #667789;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.candidate-stat strong {
+  margin-top: 5px;
+}
+
+.candidate-actions {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+.applicant-detail-panel {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  padding: 34px 20px 20px;
+  border-left: 1px solid #e5edf4;
+  background: #fbfdff;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  border: 0;
+  background: transparent;
+  color: #17212b;
+  font-weight: 900;
+}
+
+.applicant-profile-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.applicant-profile-head h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.profile-name-link {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #17212b;
+  font-size: 22px;
+  font-weight: 900;
+  text-align: left;
+}
+
+.profile-name-link:hover {
+  color: #174ea6;
+  text-decoration: underline;
+}
+
+.applicant-profile-head p,
+.applicant-profile-head span {
+  margin: 3px 0 0;
+  color: #536271;
+  font-size: 13px;
+}
+
+.detail-mini-card,
+.testing-status-card,
+.detail-reports {
+  padding: 16px;
+  border: 1px solid #dce5ee;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.detail-mini-card span,
+.detail-mini-card strong {
+  display: block;
+}
+
+.detail-mini-card span {
+  color: #667789;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.detail-mini-card strong {
+  margin-top: 7px;
+  font-size: 18px;
+}
+
+.testing-status-card h4,
+.detail-reports h4 {
+  margin: 0;
+}
+
+.status-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  margin-top: 14px;
+  color: #536271;
+}
+
+.status-step-button {
+  width: 100%;
+  border: 1px solid #c9bdf7;
+  border-radius: 8px;
+  padding: 12px;
+  background: #ffffff;
+  color: #17212b;
+  text-align: left;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.status-step-button:not(:disabled):hover {
+  border-color: #174ea6;
+  background: #f4f1ff;
+  box-shadow: 0 8px 22px rgba(23, 78, 166, 0.1);
+}
+
+.status-step-button:disabled {
+  cursor: default;
+  opacity: 0.78;
+}
+
+.status-step > span {
+  width: 12px;
+  height: 12px;
+  margin-top: 3px;
+  border: 1px solid #aebccc;
+  border-radius: 50%;
+}
+
+.status-step.active {
+  padding: 12px;
+  border-radius: 8px;
+  background: #f4f1ff;
+  color: #17212b;
+}
+
+.status-step.active > span {
+  border-color: #174ea6;
+  background: #174ea6;
+}
+
+.status-step p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.report-mini-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  min-height: 42px;
+  border: 0;
+  border-top: 1px solid #e5edf4;
+  background: transparent;
+  color: #344353;
+  text-align: left;
+}
+
+.report-mini-row em {
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: #fff1d8;
+  color: #9a5b00;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.applicant-detail-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.nested-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(12, 24, 38, 0.44);
+}
+
+.reports-viewer-modal {
+  width: min(100%, 900px);
+  max-height: min(88vh, 760px);
+  overflow: auto;
+  padding: 22px;
+  border: 1px solid #dde6ef;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 30px 80px rgba(6, 22, 38, 0.34);
+}
+
+.reports-viewer-grid {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.reports-viewer-list {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.report-viewer-item {
+  display: grid;
+  gap: 5px;
+  border: 1px solid #dce5ee;
+  border-radius: 8px;
+  padding: 12px;
+  background: #ffffff;
+  color: #17212b;
+  text-align: left;
+}
+
+.report-viewer-item.active,
+.report-viewer-item:hover {
+  border-color: #174ea6;
+  background: #eef7ff;
+}
+
+.report-viewer-item span {
+  color: #667789;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.report-viewer-detail {
+  min-width: 0;
+  border: 1px solid #dce5ee;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fbfdff;
+}

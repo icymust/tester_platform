@@ -440,6 +440,13 @@
     padding: 34px 16px 28px;
   }
 
+  .landing-scroll-top {
+    right: 16px;
+    bottom: 16px;
+    width: 46px;
+    height: 46px;
+  }
+
   .landing-copy h1 {
     font-size: 42px;
   }

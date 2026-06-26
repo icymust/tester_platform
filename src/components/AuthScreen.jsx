@@ -170,6 +170,7 @@ export function AuthScreen({
             <button
               onClick={() => {
                 onAuthModeChange(isLogin ? "register" : "login");
+                onRoleChange("");
                 onAuthErrorClear();
               }}
               type="button"

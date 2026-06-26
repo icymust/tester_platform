@@ -28,7 +28,7 @@ function App() {
   const [routePath, setRoutePath] = useState(getRoutePath);
   const [currentUserId, setCurrentUserId] = useState(loadSession);
   const [authMode, setAuthMode] = useState("login");
-  const [role, setRole] = useState("tester");
+  const [role, setRole] = useState("");
   const [authForm, setAuthForm] = useState({
     name: "",
     login: "",
@@ -146,6 +146,11 @@ function App() {
       } else {
         setAuthError("Account not found. Check your username and password.");
       }
+      return;
+    }
+
+    if (!role) {
+      setAuthError("Choose whether you are registering as a client or tester.");
       return;
     }
 
@@ -511,17 +516,19 @@ function App() {
       <LandingPage
         onOpenAuth={(mode) => {
           setAuthMode(mode || "login");
+          if (mode === "register") setRole("");
           window.history.pushState({}, "", "/auth");
           setRoutePath("/auth");
         }}
         onOpenRegister={(nextRole) => {
           setAuthMode("register");
-          if (nextRole) setRole(nextRole);
+          setRole(nextRole || "");
           window.history.pushState({}, "", "/auth");
           setRoutePath("/auth");
         }}
         onOpenSignIn={() => {
           setAuthMode("login");
+          setRole("");
           window.history.pushState({}, "", "/auth");
           setRoutePath("/auth");
         }}

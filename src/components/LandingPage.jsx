@@ -10,6 +10,7 @@ import {
   SearchCheck,
   ShieldCheck,
   Star,
+  ArrowUp,
   UserRound,
   UsersRound,
   WalletCards,
@@ -279,6 +280,15 @@ export function LandingPage({ onOpenAuth, onOpenRegister, onOpenSignIn }) {
           </button>
         </div>
       </section>
+
+      <button
+        className="landing-scroll-top"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        type="button"
+        aria-label="Scroll to top"
+      >
+        <ArrowUp size={24} />
+      </button>
     </main>
   );
 }
