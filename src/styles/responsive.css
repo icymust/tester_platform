@@ -19,9 +19,17 @@
     min-height: 0;
   }
 
-  .landing-steps,
+  .landing-steps {
+    grid-template-columns: 1fr;
+  }
+
   .landing-benefits {
     grid-template-columns: 1fr 1fr;
+    margin-top: 28px;
+  }
+
+  .landing-step-arrow {
+    transform: rotate(90deg);
   }
 
   .landing-benefit + .landing-benefit {
@@ -38,6 +46,25 @@
 
   .landing-nav {
     display: none;
+  }
+
+  .auth-shell {
+    border-radius: 0;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .auth-hero-panel {
+    min-height: 560px;
+  }
+
+  .auth-panel {
+    padding-top: 0;
+  }
+
+  .auth-card {
+    width: min(100%, 680px);
+    margin: 0 auto 42px;
   }
 
   .tester-tools {
@@ -134,10 +161,6 @@
     min-height: 58vh;
   }
 
-  .auth-hero {
-    min-height: 52vh;
-  }
-
   .landing-topbar {
     padding-block: 16px;
   }
@@ -148,6 +171,16 @@
 
   .landing-dashboard-content {
     grid-template-columns: 1fr;
+  }
+
+  .landing-split-section,
+  .landing-split-section.reverse,
+  .landing-pricing {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-split-section.reverse > div:first-child {
+    order: 0;
   }
 }
 
@@ -252,35 +285,128 @@
     display: grid;
   }
 
-  .hero h1 {
-    font-size: 42px;
+  .auth-panel {
+    padding: 0 16px 28px;
   }
 
-  .auth-panel {
-    padding: 24px 16px;
+  .auth-shell {
+    height: auto;
+    min-height: 100vh;
+    border-radius: 0;
+  }
+
+  .auth-hero-panel {
+    min-height: 0;
+    padding: 22px 16px 0;
+  }
+
+  .auth-brand {
+    font-size: 24px;
+  }
+
+  .auth-hero-content {
+    padding-top: 34px;
+  }
+
+  .auth-hero-copy h1 {
+    font-size: 46px;
+  }
+
+  .auth-hero-copy p {
+    margin-top: 22px;
+    font-size: 17px;
+  }
+
+  .auth-illustration {
+    position: relative;
+    right: auto;
+    top: auto;
+    width: 100%;
+    height: 330px;
+    min-height: 0;
+    margin-top: 22px;
+  }
+
+  .auth-orbit,
+  .auth-floating-card.chart,
+  .auth-floating-badge {
+    display: none;
+  }
+
+  .auth-floating-card.report {
+    top: 26px;
+    left: 50%;
+    width: 210px;
+    min-height: 260px;
+    transform: translateX(-50%) rotate(12deg);
+  }
+
+  .auth-floating-message {
+    top: 205px;
+    right: 18px;
+    width: 180px;
+  }
+
+  .auth-map {
+    height: 180px;
+  }
+
+  .auth-benefits {
+    grid-template-columns: 1fr;
+    margin-top: 18px;
+  }
+
+  .auth-benefits span {
+    grid-template-columns: 34px minmax(0, 1fr);
+    justify-items: start;
+    align-items: center;
+    min-height: 74px;
+    padding: 18px;
+    text-align: left;
+  }
+
+  .auth-benefits span + span {
+    border-top: 1px solid #e1e5f4;
+    border-left: 0;
   }
 
   .auth-card {
     width: 100%;
-    gap: 18px;
-    padding: 20px;
+    margin: 24px 0 0;
+    padding: 26px 18px;
     border-radius: 16px;
   }
 
-  .auth-role-grid,
-  .auth-form-grid {
-    grid-template-columns: 1fr;
+  .auth-card-header h2 {
+    font-size: 27px;
   }
 
-  .auth-hero-copy {
-    margin-top: 28px;
-  }
-
-  .auth-hero-copy p {
+  .auth-card-header p {
+    margin-top: 12px;
     font-size: 16px;
   }
 
-  .auth-header p {
+  .auth-role-switch {
+    margin: 28px 0;
+  }
+
+  .auth-role-switch button {
+    min-height: 58px;
+    font-size: 16px;
+  }
+
+  .auth-form {
+    gap: 18px;
+  }
+
+  .auth-input-wrap input,
+  .auth-submit {
+    min-height: 56px;
+    font-size: 16px;
+  }
+
+  .auth-mode-footer {
+    flex-wrap: wrap;
     font-size: 16px;
   }
 
@@ -367,8 +493,32 @@
     padding: 28px 16px;
   }
 
+  .landing-split-section,
+  .landing-pricing {
+    padding: 34px 16px;
+  }
+
+  .landing-split-section h2,
+  .landing-pricing h2 {
+    font-size: 30px;
+  }
+
+  .landing-split-section p,
+  .landing-pricing-copy p {
+    font-size: 16px;
+  }
+
+  .landing-feature-card,
+  .landing-price-card {
+    padding: 22px;
+  }
+
+  .landing-price-card strong {
+    font-size: 36px;
+  }
+
   .landing-benefits {
-    margin: 0 16px;
+    margin-top: 24px;
   }
 
   .landing-benefit {
@@ -390,27 +540,6 @@
   .landing-quote {
     justify-items: start;
     padding: 30px 16px 40px;
-  }
-
-  .auth-hero,
-  .auth-panel {
-    padding: 18px 14px;
-  }
-
-  .auth-brand {
-    font-size: 16px;
-  }
-
-  .auth-hero-copy h1 {
-    font-size: 34px;
-  }
-
-  .auth-points {
-    gap: 12px;
-  }
-
-  .auth-points li {
-    font-size: 14px;
   }
 
   .segmented {

@@ -3,10 +3,13 @@ import {
   CheckCircle2,
   ClipboardCheck,
   ClipboardPenLine,
+  CreditCard,
   FileText,
   LockKeyhole,
+  Send,
   SearchCheck,
   ShieldCheck,
+  Star,
   UserRound,
   UsersRound,
   WalletCards,
@@ -69,6 +72,18 @@ const benefits = [
   },
 ];
 
+const testerFeatures = [
+  "Apply to matching beta tasks",
+  "Submit bug reports in a clear format",
+  "Track assigned work and payments",
+];
+
+const clientFeatures = [
+  "Publish tasks with scope and budget",
+  "Review applicants before assigning work",
+  "Approve reports and pay only for completed work",
+];
+
 export function LandingPage({ onOpenAuth, onOpenRegister, onOpenSignIn }) {
   return (
     <main className="landing-shell">
@@ -83,7 +98,6 @@ export function LandingPage({ onOpenAuth, onOpenRegister, onOpenSignIn }) {
           <a href="#for-testers">For testers</a>
           <a href="#for-clients">For clients</a>
           <a href="#pricing">Pricing</a>
-          <a href="#about">About</a>
         </nav>
 
         <div className="landing-topbar-actions">
@@ -109,10 +123,10 @@ export function LandingPage({ onOpenAuth, onOpenRegister, onOpenSignIn }) {
           </p>
 
           <div className="landing-actions">
-            <button className="landing-primary-button wide" onClick={onOpenRegister} type="button">
+            <button className="landing-primary-button wide" onClick={() => onOpenRegister("client")} type="button">
               I'm a client <UsersRound size={17} />
             </button>
-            <button className="landing-secondary-button wide" onClick={onOpenAuth} type="button">
+            <button className="landing-secondary-button wide" onClick={() => onOpenRegister("tester")} type="button">
               I'm a tester <UserRound size={17} />
             </button>
           </div>
@@ -159,15 +173,57 @@ export function LandingPage({ onOpenAuth, onOpenRegister, onOpenSignIn }) {
                     <span className="changes">4 Changes requested</span>
                   </div>
                   <h3>Top testers</h3>
-                  <Tester name="alice.dev" score="4.9"/>
-                  <Tester name="dom2" score="4.8" />
-                  <Tester name="bob_the_tester" score="4.7"/>
+                  <Tester name="alice.dev" score="4.9" reports="" />
+                  <Tester name="dom2" score="4.8" reports=""/>
+                  <Tester name="bob_the_tester" score="4.7" reports="" />
                 </section>
               </div>
             </div>
           </div>
           <div className="landing-shield"><ShieldCheck size={70} /></div>
           <div className="landing-document"><FileText size={54} /><CheckCircle2 size={36} /></div>
+        </div>
+      </section>
+
+      <section className="landing-split-section" id="for-testers">
+        <div>
+          <span className="landing-section-kicker">For testers</span>
+          <h2>Find paid testing tasks and build your QA profile.</h2>
+          <p>
+            Testers can browse available projects, apply with a short message,
+            complete assigned work, and submit reports that clients can review quickly.
+          </p>
+          <button className="landing-secondary-button" onClick={() => onOpenRegister("tester")} type="button">
+            Start as tester <UserRound size={17} />
+          </button>
+        </div>
+        <div className="landing-feature-card tester">
+          <Star size={34} />
+          <h3>Tester workspace</h3>
+          {testerFeatures.map((feature) => (
+            <span key={feature}><CheckCircle2 size={18} /> {feature}</span>
+          ))}
+        </div>
+      </section>
+
+      <section className="landing-split-section reverse" id="for-clients">
+        <div>
+          <span className="landing-section-kicker">For clients</span>
+          <h2>Launch structured beta tests without managing everything manually.</h2>
+          <p>
+            Clients get a focused dashboard for tasks, applicants, reports, and
+            payments, so feedback stays connected to the product work.
+          </p>
+          <button className="landing-primary-button" onClick={() => onOpenRegister("client")} type="button">
+            Start as client <UsersRound size={17} />
+          </button>
+        </div>
+        <div className="landing-feature-card client">
+          <Send size={34} />
+          <h3>Client dashboard</h3>
+          {clientFeatures.map((feature) => (
+            <span key={feature}><CheckCircle2 size={18} /> {feature}</span>
+          ))}
         </div>
       </section>
 
@@ -188,32 +244,39 @@ export function LandingPage({ onOpenAuth, onOpenRegister, onOpenSignIn }) {
             </React.Fragment>
           ))}
         </div>
+
+        <div className="landing-benefits">
+          {benefits.map((benefit) => (
+            <article className="landing-benefit" key={benefit.title}>
+              <span className={`landing-benefit-icon ${benefit.tone}`}>
+                <benefit.icon size={34} />
+              </span>
+              <div>
+                <h3>{benefit.title}</h3>
+                <p>{benefit.text}</p>
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
 
-      <section className="landing-benefits" id="for-clients">
-        {benefits.map((benefit) => (
-          <article className="landing-benefit" key={benefit.title}>
-            <span className={`landing-benefit-icon ${benefit.tone}`}>
-              <benefit.icon size={34} />
-            </span>
-            <div>
-              <h3>{benefit.title}</h3>
-              <p>{benefit.text}</p>
-            </div>
-          </article>
-        ))}
-      </section>
-
-      <section className="landing-quote" id="about">
-        <span>“</span>
-        <p>
-          BetaHub helped us find critical issues before release. The reports
-          were detailed and saved us weeks of work.
-        </p>
-        <div className="landing-avatar" aria-hidden="true">AR</div>
-        <div>
-          <strong>Alex R.</strong>
-          <small>Product Manager</small>
+      <section className="landing-pricing" id="pricing">
+        <div className="landing-pricing-copy">
+          <span className="landing-section-kicker">Pricing</span>
+          <h2>Simple marketplace pricing for both sides.</h2>
+          <p>
+            BetaHub keeps the model clear: clients fund approved work, testers
+            get paid for completed reports, and platform fees stay visible.
+          </p>
+        </div>
+        <div className="landing-price-card">
+          <CreditCard size={34} />
+          <h3>Pay per approved task</h3>
+          <strong>Flexible</strong>
+          <p>No subscription required for the prototype flow. Create a task, choose testers, approve reports, and pay.</p>
+          <button className="landing-primary-button" onClick={onOpenRegister} type="button">
+            Get started
+          </button>
         </div>
       </section>
     </main>

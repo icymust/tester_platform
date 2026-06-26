@@ -514,8 +514,9 @@ function App() {
           window.history.pushState({}, "", "/auth");
           setRoutePath("/auth");
         }}
-        onOpenRegister={() => {
+        onOpenRegister={(nextRole) => {
           setAuthMode("register");
+          if (nextRole) setRole(nextRole);
           window.history.pushState({}, "", "/auth");
           setRoutePath("/auth");
         }}

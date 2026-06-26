@@ -1,13 +1,19 @@
 import {
-  BriefcaseBusiness,
+  BadgeCheck,
+  BarChart3,
   Check,
   Building2,
+  Clock3,
+  EyeOff,
   FlaskConical,
+  Mail,
+  MapPin,
+  MessageSquareText,
   ShieldCheck,
   UserRound,
+  X,
 } from "lucide-react";
 import React from "react";
-import { Metric } from "./common.jsx";
 
 export function AuthScreen({
   authError,
@@ -17,69 +23,97 @@ export function AuthScreen({
   onAuthErrorClear,
   onAuthFormChange,
   onAuthModeChange,
+  onGoHome,
   onRoleChange,
   role,
 }) {
+  const isLogin = authMode === "login";
+
   return (
     <main className="auth-shell">
-      <section className="hero">
-        <div className="brand">
+      <button className="auth-close-button" onClick={onGoHome} type="button" aria-label="Back to landing page">
+        <X size={24} />
+      </button>
+      <section className="auth-hero-panel">
+        <button className="auth-brand" onClick={onGoHome} type="button">
           <ShieldCheck size={34} />
           <span>BetaHub</span>
+        </button>
+
+        <div className="auth-hero-content">
+          <div className="auth-hero-copy">
+            <h1>
+              Test.
+              <span>Report.</span>
+              <strong>Ship better.</strong>
+            </h1>
+            <p>The QA marketplace that connects product teams with top testers worldwide.</p>
+          </div>
+
+          <div className="auth-illustration" aria-hidden="true">
+            <div className="auth-orbit" />
+            <div className="auth-floating-card chart">
+              <BarChart3 size={54} />
+            </div>
+            <div className="auth-floating-card report">
+              <span />
+              <h3>Bug report</h3>
+              <p />
+              <p />
+              <p />
+            </div>
+            <div className="auth-floating-badge">
+              <ShieldCheck size={38} />
+            </div>
+            <div className="auth-floating-message">
+              <span />
+              <p />
+              <p />
+            </div>
+            <div className="auth-map">
+              <MapPin className="pin pin-one" size={34} />
+              <MapPin className="pin pin-two" size={28} />
+              <MapPin className="pin pin-three" size={30} />
+              <MapPin className="pin pin-four" size={24} />
+            </div>
+          </div>
+
+          <div className="auth-benefits">
+            <span><MessageSquareText size={30} /> Real feedback</span>
+            <span><Clock3 size={30} /> Fast results</span>
+            <span><BadgeCheck size={30} /> Quality assured</span>
+          </div>
         </div>
-        <h1>IT beta testing platform</h1>
-        <p>
-          Clients publish testing tasks, QA testers apply, and the client chooses
-          the best candidate from the dashboard.
-        </p>
       </section>
 
       <section className="auth-panel">
-        <div className="auth-tabs">
-          <button
-            className={authMode === "login" ? "active" : ""}
-            onClick={() => {
-              onAuthModeChange("login");
-              onAuthErrorClear();
-            }}
-            type="button"
-          >
-            Sign in
-          </button>
-          <button
-            className={authMode === "register" ? "active" : ""}
-            onClick={() => {
-              onAuthModeChange("register");
-              onAuthErrorClear();
-            }}
-            type="button"
-          >
-            Register
-          </button>
-        </div>
+        <div className={`auth-card ${isLogin ? "login-mode" : "register-mode"}`}>
+          <div className="auth-card-header">
+            <h2>{isLogin ? "Welcome back" : "Create account"}</h2>
+            <p>{isLogin ? "Please sign in to your account" : "Join BetaHub and start testing smarter"}</p>
+          </div>
 
-        <form onSubmit={onAuth} className="form">
-          {authMode === "register" && (
-            <>
-              <div className="role-picker">
-                <span>Register as</span>
-                <div className="segmented">
-                  <button
-                    className={role === "tester" ? "active" : ""}
-                    onClick={() => onRoleChange("tester")}
-                    type="button"
-                  >
-                    <FlaskConical size={18} /> Tester
-                  </button>
-                  <button
-                    className={role === "client" ? "active" : ""}
-                    onClick={() => onRoleChange("client")}
-                    type="button"
-                  >
-                    <Building2 size={18} /> Client
-                  </button>
-                </div>
-              </div>
+          {!isLogin && (
+            <div className="auth-role-switch">
+              <button
+                className={role === "client" ? "active" : ""}
+                onClick={() => onRoleChange("client")}
+                type="button"
+              >
+                <Building2 size={21} /> Client
+              </button>
+              <button
+                className={role === "tester" ? "active" : ""}
+                onClick={() => onRoleChange("tester")}
+                type="button"
+              >
+                <UserRound size={21} /> Tester
+              </button>
+            </div>
+          )}
+
+          <form onSubmit={onAuth} className="auth-form">
+            {!isLogin && (
               <label>
                 Name or company
                 <input
@@ -91,39 +125,59 @@ export function AuthScreen({
                   placeholder="For example, Pixel QA"
                 />
               </label>
-            </>
-          )}
-          <label>
-            Username
-            <input
-              value={authForm.login}
-              onChange={(event) => {
-                onAuthFormChange({ ...authForm, login: event.target.value });
+            )}
+
+            <label>
+              Email
+              <span className="auth-input-wrap">
+                <input
+                  value={authForm.login}
+                  onChange={(event) => {
+                    onAuthFormChange({ ...authForm, login: event.target.value });
+                    onAuthErrorClear();
+                  }}
+                  placeholder="you@example.com"
+                />
+                <Mail size={18} />
+              </span>
+            </label>
+            <label>
+              Password
+              <span className="auth-input-wrap">
+                <input
+                  value={authForm.password}
+                  onChange={(event) => {
+                    onAuthFormChange({ ...authForm, password: event.target.value });
+                    onAuthErrorClear();
+                  }}
+                  placeholder="**********"
+                  type="password"
+                />
+                <EyeOff size={19} />
+              </span>
+            </label>
+            <button className="auth-submit" type="submit">
+              {isLogin ? "Sign in" : "Create account"}
+              {!isLogin && <Check size={18} />}
+            </button>
+            <p className={`form-error ${authError ? "visible" : ""}`}>
+              {authError || " "}
+            </p>
+          </form>
+
+          <div className="auth-mode-footer">
+            <span>{isLogin ? "New to BetaHub?" : "Already have an account?"}</span>
+            <button
+              onClick={() => {
+                onAuthModeChange(isLogin ? "register" : "login");
                 onAuthErrorClear();
               }}
-              placeholder="username"
-            />
-          </label>
-          <label>
-            Password
-            <input
-              value={authForm.password}
-              onChange={(event) => {
-                onAuthFormChange({ ...authForm, password: event.target.value });
-                onAuthErrorClear();
-              }}
-              placeholder="********"
-              type="password"
-            />
-          </label>
-          <button className="primary-button" type="submit">
-            <Check size={18} />
-            {authMode === "login" ? "Sign in" : "Create account"}
-          </button>
-          <p className={`form-error ${authError ? "visible" : ""}`}>
-            {authError || " "}
-          </p>
-        </form>
+              type="button"
+            >
+              {isLogin ? "Sign up" : "Sign in"}
+            </button>
+          </div>
+        </div>
       </section>
     </main>
   );
