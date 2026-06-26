@@ -1,10 +1,43 @@
 @media (max-width: 980px) {
   .auth-shell,
-  .landing-hero,
   .dashboard-grid,
   .client-dashboard,
   .tester-dashboard {
     grid-template-columns: 1fr;
+  }
+
+  .landing-shell {
+    border-radius: 0;
+  }
+
+  .landing-hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .landing-product {
+    min-height: 0;
+  }
+
+  .landing-steps,
+  .landing-benefits {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .landing-benefit + .landing-benefit {
+    border-left: 0;
+  }
+
+  .landing-benefit:nth-child(2n) {
+    border-left: 1px solid #e9ebf4;
+  }
+
+  .landing-benefit:nth-child(n + 3) {
+    border-top: 1px solid #e9ebf4;
+  }
+
+  .landing-nav {
+    display: none;
   }
 
   .tester-tools {
@@ -106,17 +139,15 @@
   }
 
   .landing-topbar {
-    align-items: stretch;
-    flex-direction: column;
+    padding-block: 16px;
   }
 
   .landing-topbar-actions {
-    width: 100%;
+    margin-left: auto;
   }
 
-  .landing-topbar-actions .primary-button,
-  .landing-topbar-actions .secondary-button {
-    flex: 1 1 0;
+  .landing-dashboard-content {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -254,25 +285,111 @@
   }
 
   .landing-shell {
-    padding: 10px;
+    box-shadow: none;
   }
 
-  .landing-copy,
-  .landing-panel {
-    padding: 18px;
+  .landing-topbar {
+    align-items: stretch;
+    flex-direction: column;
+    min-height: 0;
+    padding: 16px;
   }
 
-  .landing-card-grid {
-    grid-template-columns: 1fr;
+  .landing-topbar-actions {
+    width: 100%;
+    margin-left: 0;
   }
 
   .landing-topbar-actions {
     flex-direction: column;
   }
 
-  .landing-topbar-actions .primary-button,
-  .landing-topbar-actions .secondary-button {
+  .landing-topbar-actions .landing-primary-button,
+  .landing-topbar-actions .landing-link-button {
     width: 100%;
+  }
+
+  .landing-hero {
+    gap: 34px;
+    padding: 34px 16px 28px;
+  }
+
+  .landing-copy h1 {
+    font-size: 42px;
+  }
+
+  .landing-copy p {
+    font-size: 17px;
+  }
+
+  .landing-actions,
+  .landing-trust-row {
+    gap: 12px;
+  }
+
+  .landing-primary-button.wide,
+  .landing-secondary-button.wide {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .landing-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-dashboard-rail,
+  .landing-shield,
+  .landing-document {
+    display: none;
+  }
+
+  .landing-dashboard-main {
+    padding: 18px;
+  }
+
+  .landing-stats-grid,
+  .landing-report-card,
+  .landing-steps,
+  .landing-benefits,
+  .landing-quote {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-activity-row {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  .landing-activity-row time {
+    grid-column: 2;
+  }
+
+  .landing-section {
+    padding: 28px 16px;
+  }
+
+  .landing-benefits {
+    margin: 0 16px;
+  }
+
+  .landing-benefit {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .landing-benefit:nth-child(2n),
+  .landing-benefit:nth-child(n + 3),
+  .landing-benefit + .landing-benefit {
+    border-left: 0;
+    border-top: 1px solid #e9ebf4;
+  }
+
+  .landing-benefit:first-child {
+    border-top: 0;
+  }
+
+  .landing-quote {
+    justify-items: start;
+    padding: 30px 16px 40px;
   }
 
   .auth-hero,
