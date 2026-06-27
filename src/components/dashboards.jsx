@@ -28,6 +28,7 @@ import React, { useMemo, useState } from "react";
 import { Metric } from "./common.jsx";
 import {
   formatDeadline,
+  initials,
   money,
   selectedTesterIds,
   taskPayout,
@@ -92,6 +93,9 @@ export function TesterDashboard({
   applicationText,
   currentUser,
   onApply,
+  onOpenProfile,
+  onOpenSettings,
+  onSendMessage,
   onStartTask,
   onViewTask,
   onSearch,
@@ -149,6 +153,7 @@ export function TesterDashboard({
   const completedCount = myApplications.filter((item) => item.completed).length;
   const isPaymentsView = view === "payments";
   const isReportsView = view === "reports";
+  const isMessagesView = view === "messages";
   const testerPayments = testerPaymentRows(myApplications, state.tasks);
   const reportedTaskIds = new Set(myReports.map((report) => report.taskId));
   const activeReport =
@@ -206,13 +211,17 @@ export function TesterDashboard({
           >
             <Wallet size={17} /> {p.nav.payments}
           </button>
-          <button type="button">
+          <button
+            className={isMessagesView ? "active" : ""}
+            onClick={() => onViewChange("messages")}
+            type="button"
+          >
             <MessageSquare size={17} /> {p.nav.messages}
           </button>
-          <button type="button">
+          <button onClick={() => onOpenProfile(currentUser.id)} type="button">
             <UserRound size={17} /> {p.nav.profile}
           </button>
-          <button type="button">
+          <button onClick={onOpenSettings} type="button">
             <Settings size={17} /> {p.nav.settings}
           </button>
         </nav>
@@ -284,6 +293,13 @@ export function TesterDashboard({
               </div>
             )}
           </div>
+        ) : isMessagesView ? (
+          <MessagesPanel
+            currentUser={currentUser}
+            onSendMessage={onSendMessage}
+            state={state}
+            t={t}
+          />
         ) : isPaymentsView ? (
           <PaymentsPanel
             title={p.tester.paymentsTitle}
@@ -466,8 +482,12 @@ export function ClientDashboard({
   onChooseTester,
   onCreateTask,
   onDeleteTask,
+  onOpenProfile,
+  onOpenSettings,
+  onSendMessage,
   onToggleTaskHiring,
   onViewApplications,
+  onViewProfile,
   onViewTask,
   onTaskFormChange,
   state,
@@ -482,6 +502,13 @@ export function ClientDashboard({
   const applicationCount = state.applications.filter((item) =>
     myTasks.some((task) => task.id === item.taskId),
   ).length;
+  const clientApplications = state.applications
+    .map((application) => {
+      const task = myTasks.find((item) => item.id === application.taskId);
+      const tester = state.users.find((user) => user.id === application.testerId);
+      return task && tester ? { application, task, tester } : null;
+    })
+    .filter(Boolean);
   const clientPayments = clientPaymentRows(myTasks, state.applications);
   const totalBudget = myTasks.reduce((sum, task) => sum + (Number(task.budget) || 0), 0);
   const totalPaid = clientPayments.reduce((sum, row) => sum + row.paid, 0);
@@ -511,7 +538,11 @@ export function ClientDashboard({
           >
             <BriefcaseBusiness size={17} /> {p.client.myTasks}
           </button>
-          <button type="button">
+          <button
+            className={clientSection === "applications" ? "active" : ""}
+            onClick={() => setClientSection("applications")}
+            type="button"
+          >
             <UsersRound size={17} /> {p.nav.applications}
           </button>
           <button type="button">
@@ -524,16 +555,37 @@ export function ClientDashboard({
           >
             <Wallet size={17} /> {p.nav.payments}
           </button>
-          <button type="button">
+          <button
+            className={clientSection === "messages" ? "active" : ""}
+            onClick={() => setClientSection("messages")}
+            type="button"
+          >
             <MessageSquare size={17} /> {p.nav.messages}
           </button>
-          <button type="button">
+          <button onClick={() => onOpenProfile(currentUser.id)} type="button">
+            <UserRound size={17} /> {p.nav.profile}
+          </button>
+          <button onClick={onOpenSettings} type="button">
             <Settings size={17} /> {p.nav.settings}
           </button>
         </nav>
       </aside>
       <section className="client-main-panel">
-        {clientSection === "payments" ? (
+        {clientSection === "applications" ? (
+          <ClientApplicationsPanel
+            applications={clientApplications}
+            onViewApplications={onViewApplications}
+            onViewProfile={onViewProfile}
+            t={t}
+          />
+        ) : clientSection === "messages" ? (
+          <MessagesPanel
+            currentUser={currentUser}
+            onSendMessage={onSendMessage}
+            state={state}
+            t={t}
+          />
+        ) : clientSection === "payments" ? (
           <PaymentsPanel
             title={p.client.paymentsTitle}
             subtitle={p.client.paymentsSubtitle}
@@ -833,6 +885,219 @@ export function ClientDashboard({
 
 function FileTextIcon() {
   return <ClipboardList size={17} />;
+}
+
+function ClientApplicationsPanel({ applications, onViewApplications, onViewProfile, t }) {
+  const p = t.platform;
+
+  return (
+    <div className="client-applications-panel">
+      <div className="tester-board-heading">
+        <div>
+          <h1>{p.client.allApplicationsTitle}</h1>
+          <p>{p.client.allApplicationsSubtitle}</p>
+        </div>
+        <div className="tester-metrics">
+          <Metric value={applications.length} label={p.nav.applications} />
+          <Metric
+            value={applications.filter(({ application }) => application.status === "selected").length}
+            label={p.status.selected}
+          />
+        </div>
+      </div>
+
+      {applications.length === 0 ? (
+        <p className="empty-state">{p.client.noApplications}</p>
+      ) : (
+        <div className="client-application-list">
+          {applications.map(({ application, task, tester }) => (
+            <article className="client-application-row" key={application.id}>
+              <div className="applicant-profile-head">
+                <span className="avatar">{initials(tester.name || tester.login || "QA")}</span>
+                <div>
+                  <button
+                    className="profile-name-link"
+                    onClick={() => onViewProfile(tester.id)}
+                    type="button"
+                  >
+                    {tester.name || tester.login}
+                  </button>
+                  <p>{tester.skills || p.task.qaTester}</p>
+                </div>
+              </div>
+
+              <div className="client-application-task">
+                <span>{task.title}</span>
+                <strong>{task.product || p.task.product}</strong>
+              </div>
+
+              <div className="client-application-message">
+                <span>{p.client.applicantMessage}</span>
+                <p>{application.message || p.task.noDetails}</p>
+              </div>
+
+              <span className={`application-badge ${application.status === "selected" ? "selected" : ""}`}>
+                {application.status === "selected" ? p.status.selected : p.status.applied}
+              </span>
+
+              <div className="client-application-actions">
+                <button
+                  className="secondary-button small"
+                  onClick={() => onViewProfile(tester.id)}
+                  type="button"
+                >
+                  <UserRound size={16} /> {p.client.viewProfile}
+                </button>
+                <button
+                  className="secondary-button small"
+                  onClick={() => onViewApplications(task.id)}
+                  type="button"
+                >
+                  <UsersRound size={16} /> {p.client.viewApplications}
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MessagesPanel({ currentUser, onSendMessage, state, t }) {
+  const p = t.platform.messages;
+  const [activeUserId, setActiveUserId] = useState("");
+  const [draft, setDraft] = useState("");
+  const myMessages = useMemo(
+    () =>
+      [...(state.messages || [])]
+        .filter(
+          (message) =>
+            message.fromId === currentUser.id || message.toId === currentUser.id,
+        )
+        .sort((first, second) => new Date(first.createdAt) - new Date(second.createdAt)),
+    [currentUser.id, state.messages],
+  );
+  const conversations = useMemo(() => {
+    const map = new Map();
+    myMessages.forEach((message) => {
+      const otherUserId =
+        message.fromId === currentUser.id ? message.toId : message.fromId;
+      const otherUser = state.users.find((user) => user.id === otherUserId);
+      if (!otherUser) return;
+      map.set(otherUserId, {
+        lastMessage: message,
+        user: otherUser,
+      });
+    });
+    return [...map.values()].sort(
+      (first, second) =>
+        new Date(second.lastMessage.createdAt) -
+        new Date(first.lastMessage.createdAt),
+    );
+  }, [currentUser.id, myMessages, state.users]);
+  const activeConversation =
+    conversations.find((item) => item.user.id === activeUserId) ||
+    conversations[0];
+  const activeMessages = activeConversation
+    ? myMessages.filter(
+        (message) =>
+          message.fromId === activeConversation.user.id ||
+          message.toId === activeConversation.user.id,
+      )
+    : [];
+
+  React.useEffect(() => {
+    if (!activeConversation) {
+      if (activeUserId) setActiveUserId("");
+      return;
+    }
+    if (activeUserId !== activeConversation.user.id) {
+      setActiveUserId(activeConversation.user.id);
+    }
+  }, [activeConversation, activeUserId]);
+
+  function handleSend(event) {
+    event.preventDefault();
+    if (!activeConversation || !draft.trim()) return;
+    onSendMessage(activeConversation.user.id, draft);
+    setDraft("");
+  }
+
+  return (
+    <div className="messages-panel">
+      <div className="tester-board-heading">
+        <div>
+          <h1>{p.title}</h1>
+          <p>{p.subtitle}</p>
+        </div>
+        <MessageSquare size={34} />
+      </div>
+
+      {conversations.length === 0 ? (
+        <p className="empty-state">{p.empty}</p>
+      ) : (
+        <div className="messages-layout">
+          <aside className="conversation-list">
+            {conversations.map(({ lastMessage, user }) => (
+              <button
+                className={activeConversation?.user.id === user.id ? "active" : ""}
+                key={user.id}
+                onClick={() => setActiveUserId(user.id)}
+                type="button"
+              >
+                <span className="avatar mini">{user.name ? user.name[0] : "U"}</span>
+                <span>
+                  <strong>{user.name || user.login}</strong>
+                  <em>{lastMessage.text}</em>
+                </span>
+              </button>
+            ))}
+          </aside>
+
+          <section className="conversation-thread">
+            {activeConversation ? (
+              <>
+                <div className="conversation-header">
+                  <span className="avatar">{activeConversation.user.name ? activeConversation.user.name[0] : "U"}</span>
+                  <div>
+                    <h2>{activeConversation.user.name || activeConversation.user.login}</h2>
+                    <p>{activeConversation.user.role === "tester" ? t.common.tester : t.common.client}</p>
+                  </div>
+                </div>
+
+                <div className="message-list">
+                  {activeMessages.map((message) => {
+                    const isMine = message.fromId === currentUser.id;
+                    return (
+                      <article className={`message-bubble ${isMine ? "mine" : ""}`} key={message.id}>
+                        <strong>{isMine ? p.you : activeConversation.user.name}</strong>
+                        <p>{message.text}</p>
+                        <span>{formatDeadline(message.createdAt)}</span>
+                      </article>
+                    );
+                  })}
+                </div>
+
+                <form className="message-compose-row" onSubmit={handleSend}>
+                  <input
+                    value={draft}
+                    onChange={(event) => setDraft(event.target.value)}
+                    placeholder={p.writePlaceholder}
+                  />
+                  <button className="primary-button small" type="submit">
+                    <Send size={17} /> {p.send}
+                  </button>
+                </form>
+              </>
+            ) : (
+              <p className="empty-state">{p.noConversation}</p>
+            )}
+          </section>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function PaymentsPanel({ emptyLabel, metrics, rows, subtitle, title }) {

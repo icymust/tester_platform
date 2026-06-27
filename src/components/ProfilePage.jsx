@@ -11,7 +11,7 @@ import {
 import React from "react";
 import { initials } from "../lib/platform.js";
 
-export function ProfilePage({ onBack, profile, t }) {
+export function ProfilePage({ currentUser, onBack, onOpenMessage, profile, t }) {
   const p = t.platform.profile;
   if (!profile) {
     return (
@@ -29,6 +29,8 @@ export function ProfilePage({ onBack, profile, t }) {
   }
 
   if (profile.role !== "tester") {
+    const isOwnProfile = currentUser?.id === profile.id;
+
     return (
       <main className="profile-page">
         <section className="profile-shell">
@@ -41,6 +43,17 @@ export function ProfilePage({ onBack, profile, t }) {
                 <p>{profile.company || p.clientAccount}</p>
               </div>
             </div>
+            {!isOwnProfile && (
+              <div className="profile-actions">
+                <button
+                  className="secondary-button"
+                  onClick={() => onOpenMessage(profile.id)}
+                  type="button"
+                >
+                  <MessageSquare size={18} /> {p.message}
+                </button>
+              </div>
+            )}
           </article>
         </section>
       </main>
@@ -48,6 +61,7 @@ export function ProfilePage({ onBack, profile, t }) {
   }
 
   const skills = splitList(profile.skills, p.defaultSkills);
+  const isOwnProfile = currentUser?.id === profile.id;
 
   return (
     <main className="profile-page">
@@ -78,14 +92,20 @@ export function ProfilePage({ onBack, profile, t }) {
               </div>
             </div>
 
-            <div className="profile-actions">
-              <button className="primary-button" type="button">
-                <UserPlus size={18} /> {p.invite}
-              </button>
-              <button className="secondary-button" type="button">
-                <MessageSquare size={18} /> {p.message}
-              </button>
-            </div>
+            {!isOwnProfile && (
+              <div className="profile-actions">
+                <button className="primary-button" type="button">
+                  <UserPlus size={18} /> {p.invite}
+                </button>
+                <button
+                  className="secondary-button"
+                  onClick={() => onOpenMessage(profile.id)}
+                  type="button"
+                >
+                  <MessageSquare size={18} /> {p.message}
+                </button>
+              </div>
+            )}
           </section>
 
           <section className="profile-content-grid">

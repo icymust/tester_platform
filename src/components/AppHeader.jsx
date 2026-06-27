@@ -1,4 +1,4 @@
-import { LogOut, Settings, ShieldCheck } from "lucide-react";
+import { LogOut, ShieldCheck } from "lucide-react";
 import React from "react";
 import { languages } from "../lib/i18n.js";
 import { initials } from "../lib/platform.js";
@@ -9,7 +9,6 @@ export function AppHeader({
   onLogout,
   onLanguageChange,
   onOpenProfile,
-  onOpenSettings,
   t,
 }) {
   return (
@@ -32,14 +31,6 @@ export function AppHeader({
       </button>
       <div className="topbar-actions">
         <LanguageSwitch language={language} onLanguageChange={onLanguageChange} t={t} />
-        <button
-          className="icon-button"
-          onClick={onOpenSettings}
-          type="button"
-          title={t.common.accountSettings}
-        >
-          <Settings size={20} />
-        </button>
         <button
           className="icon-button"
           onClick={onLogout}

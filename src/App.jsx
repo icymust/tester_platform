@@ -88,12 +88,16 @@ function App() {
     fix: "",
   });
   const [reportFormOpen, setReportFormOpen] = useState(false);
+  const [messageRecipientId, setMessageRecipientId] = useState("");
+  const [messageDraft, setMessageDraft] = useState("");
 
   const currentUser = state.users.find((user) => user.id === currentUserId);
   const selectedTask = state.tasks.find((task) => task.id === selectedTaskId);
   const workspaceTask = state.tasks.find((task) => task.id === workspaceTaskId);
-  const routeProfileId = profileIdFromPath(routePath);
+  const isOwnProfileRoute = routePath === "/profile" || routePath === "/profile/";
+  const routeProfileId = isOwnProfileRoute ? currentUserId : profileIdFromPath(routePath);
   const routeProfile = state.users.find((user) => user.id === routeProfileId);
+  const messageRecipient = state.users.find((user) => user.id === messageRecipientId);
   const languageMeta = getLanguageMeta(language);
   const t = translations[language] || translations.en;
 
@@ -114,7 +118,10 @@ function App() {
     if (!currentUser) return;
 
     const isPlatformRoute = routePath === "/platform" || routePath.startsWith("/platform/");
-    const isProfileRoute = routePath.startsWith("/profiles/");
+    const isProfileRoute =
+      routePath === "/profile" ||
+      routePath === "/profile/" ||
+      routePath.startsWith("/profiles/");
     if (isPlatformRoute || isProfileRoute) return;
 
     window.history.replaceState({}, "", "/platform");
@@ -332,6 +339,88 @@ function App() {
     const nextPath = `/profiles/${encodeURIComponent(userId)}`;
     window.history.pushState({}, "", nextPath);
     setRoutePath(nextPath);
+  }
+
+  function navigateToOwnProfile() {
+    closeTaskDetails();
+    window.history.pushState({}, "", "/profile");
+    setRoutePath("/profile");
+  }
+
+  function openMessageModal(userId) {
+    if (!userId || userId === currentUser.id) return;
+    setMessageRecipientId(userId);
+    setMessageDraft("");
+  }
+
+  function closeMessageModal() {
+    setMessageRecipientId("");
+    setMessageDraft("");
+  }
+
+  function sendMessage(toId, text) {
+    const cleanText = text.trim();
+    if (!cleanText || !toId || toId === currentUser.id) return;
+
+    const newMessage = {
+      id: crypto.randomUUID(),
+      fromId: currentUser.id,
+      toId,
+      text: cleanText,
+      createdAt: new Date().toISOString(),
+    };
+    commit({ ...state, messages: [newMessage, ...(state.messages || [])] });
+  }
+
+  function sendProfileMessage(event) {
+    event.preventDefault();
+    if (!messageRecipient) return;
+    sendMessage(messageRecipient.id, messageDraft);
+    closeMessageModal();
+  }
+
+  function renderMessageModal() {
+    if (!messageRecipient) return null;
+
+    return (
+      <div className="modal-backdrop" role="presentation">
+        <section className="settings-modal message-compose-modal" role="dialog" aria-modal="true">
+          <div className="modal-header">
+            <div>
+              <span className="step-pill">{t.platform.messages.newMessage}</span>
+              <h2>{t.platform.messages.messageTo} {messageRecipient.name}</h2>
+            </div>
+            <button
+              className="icon-button"
+              onClick={closeMessageModal}
+              title={t.platform.messages.close}
+              type="button"
+            >
+              ×
+            </button>
+          </div>
+          <form className="form settings-form" onSubmit={sendProfileMessage}>
+            <label>
+              {t.platform.messages.title}
+              <textarea
+                autoFocus
+                value={messageDraft}
+                onChange={(event) => setMessageDraft(event.target.value)}
+                placeholder={t.platform.messages.writePlaceholder}
+              />
+            </label>
+            <div className="modal-actions">
+              <button className="secondary-button" onClick={closeMessageModal} type="button">
+                {t.platform.messages.cancel}
+              </button>
+              <button className="primary-button" type="submit">
+                {t.platform.messages.send}
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+    );
   }
 
   function goBackFromProfile() {
@@ -558,11 +647,16 @@ function App() {
 
   if (routeProfileId) {
     return (
-      <ProfilePage
-        onBack={goBackFromProfile}
-        profile={routeProfile}
-        t={t}
-      />
+      <>
+        <ProfilePage
+          currentUser={currentUser}
+          onBack={goBackFromProfile}
+          onOpenMessage={openMessageModal}
+          profile={routeProfile}
+          t={t}
+        />
+        {renderMessageModal()}
+      </>
     );
   }
 
@@ -587,7 +681,6 @@ function App() {
         onLogout={logout}
         onLanguageChange={setLanguage}
         onOpenProfile={navigateToProfile}
-        onOpenSettings={openSettings}
         t={t}
       />
 
@@ -596,6 +689,9 @@ function App() {
           applicationText={applicationText}
           currentUser={currentUser}
           onApply={applyToTask}
+          onOpenProfile={navigateToOwnProfile}
+          onOpenSettings={openSettings}
+          onSendMessage={sendMessage}
           onStartTask={openTesterWorkspace}
           onViewTask={openTaskDetails}
           onSearch={setSearch}
@@ -612,8 +708,12 @@ function App() {
           onChooseTester={chooseTester}
           onCreateTask={createTask}
           onDeleteTask={deleteTask}
+          onOpenProfile={navigateToOwnProfile}
+          onOpenSettings={openSettings}
+          onSendMessage={sendMessage}
           onToggleTaskHiring={toggleTaskHiring}
           onViewApplications={openTaskApplications}
+          onViewProfile={navigateToProfile}
           onViewTask={openTaskDetails}
           onTaskFormChange={setTaskForm}
           state={state}
@@ -671,6 +771,8 @@ function App() {
           task={workspaceTask}
         />
       )}
+
+      {renderMessageModal()}
     </main>
   );
 }

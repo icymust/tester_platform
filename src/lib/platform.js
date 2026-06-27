@@ -6,12 +6,13 @@ export const seedState = {
   tasks: [],
   applications: [],
   reports: [],
+  messages: [],
 };
 
 export function loadState() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : seedState;
+    return saved ? { ...seedState, ...JSON.parse(saved) } : seedState;
   } catch {
     return seedState;
   }
@@ -87,4 +88,3 @@ export function profileIdFromPath(path) {
   const match = path.match(/^\/profiles\/([^/]+)$/);
   return match ? decodeURIComponent(match[1]) : "";
 }
-

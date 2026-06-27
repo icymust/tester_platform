@@ -416,6 +416,206 @@
   width: min(100%, 780px);
 }
 
+.message-compose-modal textarea {
+  min-height: 150px;
+}
+
+.messages-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.messages-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  gap: 18px;
+  min-height: 560px;
+}
+
+.conversation-list,
+.conversation-thread {
+  border: 1px solid #dde6ef;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.conversation-list {
+  display: grid;
+  align-content: start;
+  overflow: hidden;
+}
+
+.conversation-list button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 74px;
+  border: 0;
+  border-bottom: 1px solid #eef3f8;
+  border-radius: 0;
+  padding: 12px;
+  background: transparent;
+  color: #17212b;
+  text-align: left;
+}
+
+.conversation-list button.active,
+.conversation-list button:hover {
+  background: #f4f8ff;
+}
+
+.conversation-list button span:last-child {
+  min-width: 0;
+}
+
+.conversation-list strong,
+.conversation-list em {
+  display: block;
+}
+
+.conversation-list em {
+  overflow: hidden;
+  color: #667789;
+  font-size: 13px;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conversation-thread {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.conversation-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid #eef3f8;
+}
+
+.conversation-header h2,
+.conversation-header p {
+  margin: 0;
+}
+
+.conversation-header p {
+  color: #667789;
+  font-size: 13px;
+}
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+  padding: 16px;
+  background: #f8fbff;
+}
+
+.message-bubble {
+  max-width: min(76%, 560px);
+  padding: 12px 14px;
+  border: 1px solid #dde6ef;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.message-bubble.mine {
+  align-self: flex-end;
+  border-color: #174ea6;
+  background: #174ea6;
+  color: #ffffff;
+}
+
+.message-bubble strong,
+.message-bubble p,
+.message-bubble span {
+  display: block;
+  margin: 0;
+}
+
+.message-bubble p {
+  margin: 5px 0;
+  line-height: 1.45;
+}
+
+.message-bubble span {
+  color: #667789;
+  font-size: 12px;
+}
+
+.message-bubble.mine span {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.message-compose-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 14px;
+  border-top: 1px solid #eef3f8;
+}
+
+.message-compose-row input {
+  min-height: 44px;
+}
+
+.client-applications-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.client-application-list {
+  display: grid;
+  gap: 12px;
+}
+
+.client-application-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.1fr) minmax(160px, 0.8fr) minmax(220px, 1fr) auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #dde6ef;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.client-application-task span,
+.client-application-task strong,
+.client-application-message span,
+.client-application-message p {
+  display: block;
+}
+
+.client-application-task span,
+.client-application-message span {
+  color: #667789;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.client-application-task strong,
+.client-application-message p {
+  margin: 4px 0 0;
+}
+
+.client-application-message p {
+  color: #344353;
+  line-height: 1.45;
+}
+
+.client-application-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 [dir="rtl"] .topbar,
 [dir="rtl"] .user-chip,
 [dir="rtl"] .modal-header,
@@ -439,7 +639,11 @@
 [dir="rtl"] .profile-section-heading,
 [dir="rtl"] .activity-item,
 [dir="rtl"] .payments-heading,
-[dir="rtl"] .payment-row {
+[dir="rtl"] .payment-row,
+[dir="rtl"] .conversation-header,
+[dir="rtl"] .conversation-list button,
+[dir="rtl"] .message-bubble,
+[dir="rtl"] .client-application-row {
   direction: rtl;
 }
 
@@ -451,6 +655,8 @@
 [dir="rtl"] .workspace-modal,
 [dir="rtl"] .profile-page,
 [dir="rtl"] .payments-panel,
+[dir="rtl"] .messages-panel,
+[dir="rtl"] .client-applications-panel,
 [dir="rtl"] .onboarding-panel {
   text-align: right;
 }
