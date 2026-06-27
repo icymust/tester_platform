@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import React from "react";
+import { languages } from "../lib/i18n.js";
 
 export function AuthScreen({
   authError,
@@ -24,30 +25,36 @@ export function AuthScreen({
   onAuthFormChange,
   onAuthModeChange,
   onGoHome,
+  onLanguageChange,
   onRoleChange,
+  language,
   role,
+  t,
 }) {
   const isLogin = authMode === "login";
 
   return (
     <main className="auth-shell">
-      <button className="auth-close-button" onClick={onGoHome} type="button" aria-label="Back to landing page">
+      <div className="auth-language-wrap">
+        <LanguageSwitch language={language} onLanguageChange={onLanguageChange} />
+      </div>
+      <button className="auth-close-button" onClick={onGoHome} type="button" aria-label={t.auth.back}>
         <X size={24} />
       </button>
       <section className="auth-hero-panel">
         <button className="auth-brand" onClick={onGoHome} type="button">
           <ShieldCheck size={34} />
-          <span>BetaHub</span>
+          <span>{t.common.betaHub}</span>
         </button>
 
         <div className="auth-hero-content">
           <div className="auth-hero-copy">
             <h1>
-              Test.
-              <span>Report.</span>
-              <strong>Ship better.</strong>
+              {t.auth.headlineA}
+              <span>{t.auth.headlineB}</span>
+              <strong>{t.auth.headlineC}</strong>
             </h1>
-            <p>The QA marketplace that connects product teams with top testers worldwide.</p>
+            <p>{t.auth.intro}</p>
           </div>
 
           <div className="auth-illustration" aria-hidden="true">
@@ -57,7 +64,7 @@ export function AuthScreen({
             </div>
             <div className="auth-floating-card report">
               <span />
-              <h3>Bug report</h3>
+              <h3>{t.auth.reportCard}</h3>
               <p />
               <p />
               <p />
@@ -79,9 +86,9 @@ export function AuthScreen({
           </div>
 
           <div className="auth-benefits">
-            <span><MessageSquareText size={30} /> Real feedback</span>
-            <span><Clock3 size={30} /> Fast results</span>
-            <span><BadgeCheck size={30} /> Quality assured</span>
+            <span><MessageSquareText size={30} /> {t.auth.realFeedback}</span>
+            <span><Clock3 size={30} /> {t.auth.fastResults}</span>
+            <span><BadgeCheck size={30} /> {t.auth.qualityAssured}</span>
           </div>
         </div>
       </section>
@@ -89,8 +96,8 @@ export function AuthScreen({
       <section className="auth-panel">
         <div className={`auth-card ${isLogin ? "login-mode" : "register-mode"}`}>
           <div className="auth-card-header">
-            <h2>{isLogin ? "Welcome back" : "Create account"}</h2>
-            <p>{isLogin ? "Please sign in to your account" : "Join BetaHub and start testing smarter"}</p>
+            <h2>{isLogin ? t.auth.welcome : t.auth.create}</h2>
+            <p>{isLogin ? t.auth.signInPrompt : t.auth.signUpPrompt}</p>
           </div>
 
           {!isLogin && (
@@ -100,14 +107,14 @@ export function AuthScreen({
                 onClick={() => onRoleChange("client")}
                 type="button"
               >
-                <Building2 size={21} /> Client
+                <Building2 size={21} /> {t.common.client}
               </button>
               <button
                 className={role === "tester" ? "active" : ""}
                 onClick={() => onRoleChange("tester")}
                 type="button"
               >
-                <UserRound size={21} /> Tester
+                <UserRound size={21} /> {t.common.tester}
               </button>
             </div>
           )}
@@ -115,20 +122,20 @@ export function AuthScreen({
           <form onSubmit={onAuth} className="auth-form">
             {!isLogin && (
               <label>
-                Name or company
+                {t.auth.name}
                 <input
                   value={authForm.name}
                   onChange={(event) => {
                     onAuthFormChange({ ...authForm, name: event.target.value });
                     onAuthErrorClear();
                   }}
-                  placeholder="For example, Pixel QA"
+                  placeholder={t.auth.namePlaceholder}
                 />
               </label>
             )}
 
             <label>
-              Email
+              {t.common.email}
               <span className="auth-input-wrap">
                 <input
                   value={authForm.login}
@@ -136,13 +143,13 @@ export function AuthScreen({
                     onAuthFormChange({ ...authForm, login: event.target.value });
                     onAuthErrorClear();
                   }}
-                  placeholder="you@example.com"
+                  placeholder={t.auth.emailPlaceholder}
                 />
                 <Mail size={18} />
               </span>
             </label>
             <label>
-              Password
+              {t.common.password}
               <span className="auth-input-wrap">
                 <input
                   value={authForm.password}
@@ -157,7 +164,7 @@ export function AuthScreen({
               </span>
             </label>
             <button className="auth-submit" type="submit">
-              {isLogin ? "Sign in" : "Create account"}
+              {isLogin ? t.auth.signIn : t.auth.create}
               {!isLogin && <Check size={18} />}
             </button>
             <p className={`form-error ${authError ? "visible" : ""}`}>
@@ -166,7 +173,7 @@ export function AuthScreen({
           </form>
 
           <div className="auth-mode-footer">
-            <span>{isLogin ? "New to BetaHub?" : "Already have an account?"}</span>
+            <span>{isLogin ? t.auth.newTo : t.auth.already}</span>
             <button
               onClick={() => {
                 onAuthModeChange(isLogin ? "register" : "login");
@@ -175,11 +182,28 @@ export function AuthScreen({
               }}
               type="button"
             >
-              {isLogin ? "Sign up" : "Sign in"}
+              {isLogin ? t.auth.signUp : t.auth.signIn}
             </button>
           </div>
         </div>
       </section>
     </main>
+  );
+}
+
+function LanguageSwitch({ language, onLanguageChange }) {
+  return (
+    <div className="language-switch" aria-label="Language">
+      {Object.entries(languages).map(([key, meta]) => (
+        <button
+          className={language === key ? "active" : ""}
+          key={key}
+          onClick={() => onLanguageChange(key)}
+          type="button"
+        >
+          {meta.short}
+        </button>
+      ))}
+    </div>
   );
 }

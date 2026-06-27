@@ -102,6 +102,41 @@
   transform: translateY(-2px);
 }
 
+[dir="rtl"] .landing-topbar,
+[dir="rtl"] .landing-topbar-actions,
+[dir="rtl"] .landing-link-button,
+[dir="rtl"] .landing-primary-button,
+[dir="rtl"] .landing-secondary-button,
+[dir="rtl"] .landing-trust-row span,
+[dir="rtl"] .landing-feature-card span,
+[dir="rtl"] .landing-step,
+[dir="rtl"] .landing-benefit {
+  direction: rtl;
+}
+
+[dir="rtl"] .landing-copy,
+[dir="rtl"] .landing-split-section,
+[dir="rtl"] .landing-pricing-copy,
+[dir="rtl"] .landing-feature-card,
+[dir="rtl"] .landing-price-card,
+[dir="rtl"] .landing-step,
+[dir="rtl"] .landing-benefit {
+  text-align: right;
+}
+
+[dir="rtl"] .landing-split-section.reverse > div:first-child {
+  order: 0;
+}
+
+[dir="rtl"] .landing-scroll-top {
+  right: auto;
+  left: 26px;
+}
+
+[dir="rtl"] .landing-step-arrow {
+  transform: rotate(180deg);
+}
+
 .landing-primary-button.wide,
 .landing-secondary-button.wide {
   min-width: 230px;

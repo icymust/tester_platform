@@ -7,16 +7,18 @@ export function AccountSettingsModal({
   onFormChange,
   onSave,
   settingsForm,
+  t,
 }) {
+  const p = t.platform;
   return (
     <div className="modal-backdrop" role="presentation">
       <section className="settings-modal" role="dialog" aria-modal="true">
         <div className="modal-header">
           <div>
-            <span className="step-pill">Account settings</span>
-            <h2>Edit account</h2>
+            <span className="step-pill">{p.settings.pill}</span>
+            <h2>{p.settings.title}</h2>
           </div>
-          <button className="icon-button" onClick={onClose} type="button" title="Close">
+          <button className="icon-button" onClick={onClose} type="button" title={p.settings.close}>
             <X size={20} />
           </button>
         </div>
@@ -24,29 +26,29 @@ export function AccountSettingsModal({
         <form className="form settings-form" onSubmit={onSave}>
           <div className="form-grid">
             <label>
-              Name
+              {p.settings.name}
               <input
                 value={settingsForm.name}
                 onChange={(event) =>
                   onFormChange({ ...settingsForm, name: event.target.value })
                 }
-                placeholder="Your name or company"
+                placeholder={p.settings.namePlaceholder}
               />
             </label>
             <label>
-              Username
+              {p.settings.username}
               <input
                 value={settingsForm.login}
                 onChange={(event) =>
                   onFormChange({ ...settingsForm, login: event.target.value })
                 }
-                placeholder="username"
+                placeholder={p.settings.usernamePlaceholder}
               />
             </label>
           </div>
 
           <label>
-            Password
+            {p.settings.password}
             <input
               value={settingsForm.password}
               onChange={(event) =>
@@ -60,7 +62,7 @@ export function AccountSettingsModal({
           {currentUser.role === "tester" && (
             <>
               <label>
-                Experience
+                {p.onboarding.experience}
                 <textarea
                   value={settingsForm.experience}
                   onChange={(event) =>
@@ -69,21 +71,21 @@ export function AccountSettingsModal({
                       experience: event.target.value,
                     })
                   }
-                  placeholder="For example, 2 years of manual testing"
+                  placeholder={p.onboarding.experiencePlaceholder}
                 />
               </label>
               <label>
-                Skills
+                {p.onboarding.skills}
                 <textarea
                   value={settingsForm.skills}
                   onChange={(event) =>
                     onFormChange({ ...settingsForm, skills: event.target.value })
                   }
-                  placeholder="Web, mobile, API, SQL"
+                  placeholder={p.onboarding.skillsPlaceholder}
                 />
               </label>
               <label>
-                Education / Training
+                {p.onboarding.education}
                 <textarea
                   value={settingsForm.education}
                   onChange={(event) =>
@@ -92,11 +94,11 @@ export function AccountSettingsModal({
                       education: event.target.value,
                     })
                   }
-                  placeholder="QA courses, bootcamps, university, self-study"
+                  placeholder={p.onboarding.educationPlaceholder}
                 />
               </label>
               <label>
-                Certificates
+                {p.onboarding.certificates}
                 <input
                   value={settingsForm.certificates}
                   onChange={(event) =>
@@ -105,7 +107,7 @@ export function AccountSettingsModal({
                       certificates: event.target.value,
                     })
                   }
-                  placeholder="ISTQB, courses, degree"
+                  placeholder={p.onboarding.certificatesPlaceholder}
                 />
               </label>
             </>
@@ -113,10 +115,10 @@ export function AccountSettingsModal({
 
           <div className="modal-actions">
             <button className="secondary-button" onClick={onClose} type="button">
-              Cancel
+              {p.settings.cancel}
             </button>
             <button className="primary-button" type="submit">
-              <Check size={18} /> Save changes
+              <Check size={18} /> {p.settings.save}
             </button>
           </div>
         </form>

@@ -11,30 +11,32 @@ export function TesterWorkspaceModal({
   onSubmitReport,
   reportForm,
   reportFormOpen,
+  t,
   task,
 }) {
+  const p = t.platform.workspace;
   return (
     <div className="modal-backdrop" role="presentation">
       <section className="settings-modal workspace-modal" role="dialog" aria-modal="true">
         <div className="modal-header">
           <div>
-            <span className="step-pill">Testing workspace</span>
+            <span className="step-pill">{p.pill}</span>
             <h2>{task.title}</h2>
           </div>
-          <button className="icon-button" onClick={onClose} type="button" title="Close">
+          <button className="icon-button" onClick={onClose} type="button" title={t.platform.settings.close}>
             <X size={20} />
           </button>
         </div>
 
         <div className="task-detail-grid">
-          <DetailBlock label="Product" value={task.product} />
-          <DetailBlock label="Your payout" value={money(taskPayout(task))} />
-          <DetailBlock label="Deadline" value={formatDeadline(task.deadline)} />
-          <DetailBlock label="Tester" value={currentUser.name} />
+          <DetailBlock label={p.product} value={task.product} />
+          <DetailBlock label={p.payout} value={money(taskPayout(task))} />
+          <DetailBlock label={p.deadline} value={formatDeadline(task.deadline)} />
+          <DetailBlock label={p.tester} value={currentUser.name} />
         </div>
 
         <div className="detail-section">
-          <h3>Testing target</h3>
+          <h3>{p.target}</h3>
           {task.privateLink ? (
             <a
               className="work-link"
@@ -45,45 +47,45 @@ export function TesterWorkspaceModal({
               <ExternalLink size={17} /> {task.privateLink}
             </a>
           ) : (
-            <p>No private work link was provided.</p>
+            <p>{p.noLink}</p>
           )}
         </div>
 
         <div className="detail-section">
-          <h3>Requirements and deliverables</h3>
-          <p>{task.expected || "No requirements provided."}</p>
+          <h3>{p.requirements}</h3>
+          <p>{task.expected || p.noRequirements}</p>
         </div>
 
         <div className="workspace-actions">
           <button className="danger-button" onClick={onReportToggle} type="button">
-            <Bug size={18} /> Report bug
+            <Bug size={18} /> {p.reportIssue}
           </button>
         </div>
 
         {reportFormOpen && (
           <form className="form report-form" onSubmit={onSubmitReport}>
             <label>
-              Report title
+              {p.reportTitle}
               <input
                 value={reportForm.title}
                 onChange={(event) =>
                   onFormChange({ ...reportForm, title: event.target.value })
                 }
-                placeholder="Payment flow exposes internal error"
+                placeholder={p.reportTitlePlaceholder}
               />
             </label>
             <label>
-              Where did you find it?
+              {p.location}
               <input
                 value={reportForm.location}
                 onChange={(event) =>
                   onFormChange({ ...reportForm, location: event.target.value })
                 }
-                placeholder="URL, screen, endpoint, or user flow"
+                placeholder={p.locationPlaceholder}
               />
             </label>
             <label>
-              Vulnerability / bug details
+              {p.vulnerability}
               <textarea
                 value={reportForm.vulnerability}
                 onChange={(event) =>
@@ -92,21 +94,21 @@ export function TesterWorkspaceModal({
                     vulnerability: event.target.value,
                   })
                 }
-                placeholder="What happened, why it matters, and how to reproduce it"
+                placeholder={p.vulnerabilityPlaceholder}
               />
             </label>
             <label>
-              Suggested fix
+              {p.fix}
               <textarea
                 value={reportForm.fix}
                 onChange={(event) =>
                   onFormChange({ ...reportForm, fix: event.target.value })
                 }
-                placeholder="How the client can fix or reduce the issue"
+                placeholder={p.fixPlaceholder}
               />
             </label>
             <button className="primary-button" type="submit">
-              <Send size={18} /> Send report
+              <Send size={18} /> {p.submit}
             </button>
           </form>
         )}

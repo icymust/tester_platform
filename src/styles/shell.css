@@ -415,3 +415,50 @@
 .settings-modal.create-task-modal {
   width: min(100%, 780px);
 }
+
+[dir="rtl"] .topbar,
+[dir="rtl"] .user-chip,
+[dir="rtl"] .modal-header,
+[dir="rtl"] .task-title-row,
+[dir="rtl"] .overview-card,
+[dir="rtl"] .overview-tile,
+[dir="rtl"] .selected-banner,
+[dir="rtl"] .detail-section,
+[dir="rtl"] .applications-heading,
+[dir="rtl"] .applications-tools,
+[dir="rtl"] .candidate-row,
+[dir="rtl"] .applicant-profile-head,
+[dir="rtl"] .testing-status-card,
+[dir="rtl"] .section-row,
+[dir="rtl"] .report-summary,
+[dir="rtl"] .profile-topbar,
+[dir="rtl"] .profile-hero-main,
+[dir="rtl"] .profile-name-row,
+[dir="rtl"] .profile-subline,
+[dir="rtl"] .profile-actions,
+[dir="rtl"] .profile-section-heading,
+[dir="rtl"] .activity-item,
+[dir="rtl"] .payments-heading,
+[dir="rtl"] .payment-row {
+  direction: rtl;
+}
+
+[dir="rtl"] .user-chip,
+[dir="rtl"] .tester-main-panel,
+[dir="rtl"] .client-main-panel,
+[dir="rtl"] .settings-modal,
+[dir="rtl"] .applications-modal,
+[dir="rtl"] .workspace-modal,
+[dir="rtl"] .profile-page,
+[dir="rtl"] .payments-panel,
+[dir="rtl"] .onboarding-panel {
+  text-align: right;
+}
+
+[dir="rtl"] .topbar-actions,
+[dir="rtl"] .modal-actions,
+[dir="rtl"] .profile-actions,
+[dir="rtl"] .applicant-detail-actions,
+[dir="rtl"] .overview-actions {
+  flex-direction: row-reverse;
+}

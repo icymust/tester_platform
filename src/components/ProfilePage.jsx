@@ -11,16 +11,17 @@ import {
 import React from "react";
 import { initials } from "../lib/platform.js";
 
-export function ProfilePage({ onBack, profile }) {
+export function ProfilePage({ onBack, profile, t }) {
+  const p = t.platform.profile;
   if (!profile) {
     return (
       <main className="profile-page">
         <section className="profile-shell">
-          <ProfileTopbar onBack={onBack} />
+          <ProfileTopbar onBack={onBack} t={t} />
           <div className="profile-card">
-            <span className="step-pill">Profile</span>
-            <h1>Profile not found</h1>
-            <p className="muted">This profile is not available in local data.</p>
+            <span className="step-pill">{p.profile}</span>
+            <h1>{p.notFound}</h1>
+            <p className="muted">{p.notAvailable}</p>
           </div>
         </section>
       </main>
@@ -31,13 +32,13 @@ export function ProfilePage({ onBack, profile }) {
     return (
       <main className="profile-page">
         <section className="profile-shell">
-          <ProfileTopbar onBack={onBack} />
+          <ProfileTopbar onBack={onBack} t={t} />
           <article className="profile-card">
             <div className="profile-hero-main">
-              <span className="avatar large">{initials(profile.name || "Client")}</span>
+              <span className="avatar large">{initials(profile.name || t.common.client)}</span>
               <div>
-                <h1>{profile.name || "Client"}</h1>
-                <p>{profile.company || "Client account"}</p>
+                <h1>{profile.name || t.common.client}</h1>
+                <p>{profile.company || p.clientAccount}</p>
               </div>
             </div>
           </article>
@@ -46,17 +47,12 @@ export function ProfilePage({ onBack, profile }) {
     );
   }
 
-  const skills = splitList(profile.skills, [
-    "Web Testing",
-    "Mobile Testing",
-    "API Testing",
-    "Bug Reporting",
-  ]);
+  const skills = splitList(profile.skills, p.defaultSkills);
 
   return (
     <main className="profile-page">
       <section className="profile-shell modern-profile">
-        <ProfileTopbar onBack={onBack} />
+        <ProfileTopbar onBack={onBack} t={t} />
 
         <article className="profile-modern-card">
           <section className="profile-hero-panel">
@@ -67,12 +63,12 @@ export function ProfilePage({ onBack, profile }) {
               </div>
               <div>
                 <div className="profile-name-row">
-                  <h1>{profile.name || "QA Tester"}</h1>
-                  <span className="tag">Top rated</span>
+                  <h1>{profile.name || p.qaTester}</h1>
+                  <span className="tag">{p.topRated}</span>
                 </div>
                 <div className="profile-subline">
                   <span><MapPin size={16} /> Dubai, UAE</span>
-                  <span>Member since Jun 2026</span>
+                  <span>{p.memberSince}</span>
                 </div>
                 <div className="profile-tags">
                   {skills.slice(0, 3).map((skill) => (
@@ -84,10 +80,10 @@ export function ProfilePage({ onBack, profile }) {
 
             <div className="profile-actions">
               <button className="primary-button" type="button">
-                <UserPlus size={18} /> Invite to task
+                <UserPlus size={18} /> {p.invite}
               </button>
               <button className="secondary-button" type="button">
-                <MessageSquare size={18} /> Message
+                <MessageSquare size={18} /> {p.message}
               </button>
             </div>
           </section>
@@ -95,19 +91,19 @@ export function ProfilePage({ onBack, profile }) {
           <section className="profile-content-grid">
             <div className="profile-left-column">
               <div className="profile-stats-card">
-                <ProfileStat label="Rating" value="4.8" detail="24 reviews" stars />
-                <ProfileStat label="Success rate" value="96%" detail="Based on 25 tasks" />
-                <ProfileStat label="Tasks completed" value="18" detail="Across all time" />
-                <ProfileStat label="Response time" value="2h" detail="Avg. first response" />
+                <ProfileStat label={p.rating} value="4.8" detail={`24 ${p.reviews}`} stars />
+                <ProfileStat label={p.successRate} value="96%" detail={p.basedOnTasks} />
+                <ProfileStat label={p.tasksCompleted} value="18" detail={p.acrossAllTime} />
+                <ProfileStat label={p.responseTime} value="2h" detail={p.avgResponse} />
               </div>
 
               <div className="profile-section-card">
-                <SectionHeading icon={<BriefcaseBusiness size={21} />} title="Experience" />
-                <p>{profile.experience || "No experience added yet."}</p>
+                <SectionHeading icon={<BriefcaseBusiness size={21} />} title={p.experience} />
+                <p>{profile.experience || p.noExperience}</p>
               </div>
 
               <div className="profile-section-card">
-                <SectionHeading icon={<ShieldCheck size={21} />} title="Skills" />
+                <SectionHeading icon={<ShieldCheck size={21} />} title={p.skills} />
                 <div className="skill-chip-list">
                   {skills.map((skill) => (
                     <span key={skill}>{skill}</span>
@@ -116,42 +112,39 @@ export function ProfilePage({ onBack, profile }) {
               </div>
 
               <div className="profile-section-card">
-                <SectionHeading icon={<GraduationCap size={21} />} title="Education / Training" />
-                <p>{profile.education || "No education or training added yet."}</p>
+                <SectionHeading icon={<GraduationCap size={21} />} title={p.education} />
+                <p>{profile.education || p.noEducation}</p>
               </div>
 
               <div className="profile-section-card">
-                <SectionHeading icon={<ShieldCheck size={21} />} title="Certificates" />
-                <p>{profile.certificates || "No certificates added yet."}</p>
+                <SectionHeading icon={<ShieldCheck size={21} />} title={p.certificates} />
+                <p>{profile.certificates || p.noCertificates}</p>
               </div>
             </div>
 
             <aside className="profile-right-column">
               <div className="profile-side-card">
-                <h2>About tester</h2>
-                <p>
-                  QA engineer focused on clear bug reports, reliable communication,
-                  and practical recommendations for product teams.
-                </p>
+                <h2>{p.about}</h2>
+                <p>{p.aboutText}</p>
                 <div className="profile-languages">
-                  <strong>Languages</strong>
-                  <span>English</span>
-                  <span>Russian</span>
+                  <strong>{p.languages}</strong>
+                  <span>{p.english}</span>
+                  <span>{p.russian}</span>
                 </div>
               </div>
 
               <div className="profile-side-card">
-                <h2>Recent activity</h2>
-                <ActivityItem date="26 Jun 2026" text="Submitted report for API" status="Approved" />
-                <ActivityItem date="25 Jun 2026" text="Submitted report for Web App" status="Approved" />
-                <ActivityItem date="23 Jun 2026" text="Submitted report for Mobile App" status="Pending" />
+                <h2>{p.recentActivity}</h2>
+                <ActivityItem date="26 Jun 2026" text={`${p.submittedReportFor} API`} status={p.approved} approved />
+                <ActivityItem date="25 Jun 2026" text={`${p.submittedReportFor} Web App`} status={p.approved} approved />
+                <ActivityItem date="23 Jun 2026" text={`${p.submittedReportFor} Mobile App`} status={p.pending} />
               </div>
 
               <div className="profile-side-card">
-                <h2>Reviews (24)</h2>
+                <h2>{p.reviews} (24)</h2>
                 <div className="reviews-score">
                   <strong>4.8</strong>
-                  <span><Star size={16} fill="currentColor" /> 24 reviews</span>
+                  <span><Star size={16} fill="currentColor" /> 24 {p.reviews}</span>
                 </div>
                 <ReviewBar label="5" value="82%" count="19" />
                 <ReviewBar label="4" value="34%" count="4" />
@@ -161,11 +154,11 @@ export function ProfilePage({ onBack, profile }) {
           </section>
 
           <footer className="profile-bottom-stats">
-            <ProfileStat label="Tasks completed" value="18" />
-            <ProfileStat label="Success rate" value="96%" />
-            <ProfileStat label="On-time delivery" value="94%" />
-            <ProfileStat label="Repeat clients" value="12" />
-            <ProfileStat label="Last active" value="Today" />
+            <ProfileStat label={p.tasksCompleted} value="18" />
+            <ProfileStat label={p.successRate} value="96%" />
+            <ProfileStat label={p.onTime} value="94%" />
+            <ProfileStat label={p.repeatClients} value="12" />
+            <ProfileStat label={p.lastActive} value={p.today} />
           </footer>
         </article>
       </section>
@@ -173,15 +166,15 @@ export function ProfilePage({ onBack, profile }) {
   );
 }
 
-function ProfileTopbar({ onBack }) {
+function ProfileTopbar({ onBack, t }) {
   return (
     <div className="profile-topbar">
       <div className="brand compact">
         <ShieldCheck size={28} />
-        <span>BetaHub</span>
+        <span>{t.common.betaHub}</span>
       </div>
       <button className="secondary-button small" onClick={onBack} type="button">
-        <ArrowLeft size={17} /> Back to applications
+        <ArrowLeft size={17} /> {t.platform.profile.back}
       </button>
     </div>
   );
@@ -207,14 +200,14 @@ function ProfileStat({ detail, label, stars, value }) {
   );
 }
 
-function ActivityItem({ date, status, text }) {
+function ActivityItem({ approved = false, date, status, text }) {
   return (
     <div className="activity-item">
       <div>
         <strong>{date}</strong>
         <span>{text}</span>
       </div>
-      <em className={status === "Approved" ? "approved" : ""}>{status}</em>
+      <em className={approved ? "approved" : ""}>{status}</em>
     </div>
   );
 }

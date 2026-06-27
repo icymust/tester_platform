@@ -22,8 +22,12 @@ import {
   selectedTesterIds,
   taskSlots,
 } from "./lib/platform.js";
+import { getLanguageMeta, translations } from "./lib/i18n.js";
 
 function App() {
+  const [language, setLanguage] = useState(
+    () => localStorage.getItem("betahub_language") || "en",
+  );
   const [state, setState] = useState(loadState);
   const [routePath, setRoutePath] = useState(getRoutePath);
   const [currentUserId, setCurrentUserId] = useState(loadSession);
@@ -90,6 +94,14 @@ function App() {
   const workspaceTask = state.tasks.find((task) => task.id === workspaceTaskId);
   const routeProfileId = profileIdFromPath(routePath);
   const routeProfile = state.users.find((user) => user.id === routeProfileId);
+  const languageMeta = getLanguageMeta(language);
+  const t = translations[language] || translations.en;
+
+  useEffect(() => {
+    localStorage.setItem("betahub_language", language);
+    document.documentElement.lang = language;
+    document.documentElement.dir = languageMeta.dir;
+  }, [language, languageMeta.dir]);
 
   useEffect(() => {
     if (currentUserId && !currentUser) {
@@ -144,13 +156,13 @@ function App() {
         window.history.pushState({}, "", "/platform");
         setRoutePath("/platform");
       } else {
-        setAuthError("Account not found. Check your username and password.");
+        setAuthError(t.errors.accountNotFound);
       }
       return;
     }
 
     if (!role) {
-      setAuthError("Choose whether you are registering as a client or tester.");
+      setAuthError(t.errors.roleRequired);
       return;
     }
 
@@ -159,7 +171,7 @@ function App() {
       (user) => user.login.toLowerCase() === login.toLowerCase(),
     );
     if (loginTaken) {
-      setAuthError("This username is already taken.");
+      setAuthError(t.errors.usernameTaken);
       return;
     }
 
@@ -504,6 +516,10 @@ function App() {
           onAuthModeChange={setAuthMode}
           onRoleChange={setRole}
           role={role}
+          language={language}
+          languageMeta={languageMeta}
+          onLanguageChange={setLanguage}
+          t={t}
           onGoHome={() => {
             window.history.pushState({}, "", "/");
             setRoutePath("/");
@@ -532,6 +548,10 @@ function App() {
           window.history.pushState({}, "", "/auth");
           setRoutePath("/auth");
         }}
+        language={language}
+        languageMeta={languageMeta}
+        onLanguageChange={setLanguage}
+        t={t}
       />
     );
   }
@@ -541,6 +561,7 @@ function App() {
       <ProfilePage
         onBack={goBackFromProfile}
         profile={routeProfile}
+        t={t}
       />
     );
   }
@@ -553,6 +574,7 @@ function App() {
         onProfileChange={setProfileForm}
         onUpdateProfile={updateProfile}
         profileForm={profileForm}
+        t={t}
       />
     );
   }
@@ -561,9 +583,12 @@ function App() {
     <main className="app-shell">
       <AppHeader
         currentUser={currentUser}
+        language={language}
         onLogout={logout}
+        onLanguageChange={setLanguage}
         onOpenProfile={navigateToProfile}
         onOpenSettings={openSettings}
+        t={t}
       />
 
       {currentUser.role === "tester" ? (
@@ -574,12 +599,13 @@ function App() {
           onStartTask={openTesterWorkspace}
           onViewTask={openTaskDetails}
           onSearch={setSearch}
-          onTextChange={setApplicationText}
-          onViewChange={setTesterView}
-          search={search}
-          state={state}
-          view={testerView}
-        />
+        onTextChange={setApplicationText}
+        onViewChange={setTesterView}
+        search={search}
+        state={state}
+        t={t}
+        view={testerView}
+      />
       ) : (
         <ClientDashboard
           currentUser={currentUser}
@@ -591,6 +617,7 @@ function App() {
           onViewTask={openTaskDetails}
           onTaskFormChange={setTaskForm}
           state={state}
+          t={t}
           taskForm={taskForm}
         />
       )}
@@ -602,6 +629,7 @@ function App() {
           onFormChange={setSettingsForm}
           onSave={saveSettings}
           settingsForm={settingsForm}
+          t={t}
         />
       )}
 
@@ -624,6 +652,7 @@ function App() {
           onSaveEdit={saveTaskEdit}
           onTextChange={setApplicationText}
           state={state}
+          t={t}
           task={selectedTask}
           taskEditForm={taskEditForm}
         />
@@ -638,6 +667,7 @@ function App() {
           onSubmitReport={submitBugReport}
           reportForm={reportForm}
           reportFormOpen={reportFormOpen}
+          t={t}
           task={workspaceTask}
         />
       )}

@@ -28,6 +28,13 @@
   backdrop-filter: blur(14px);
 }
 
+.auth-language-wrap {
+  position: absolute;
+  top: 22px;
+  right: 76px;
+  z-index: 10;
+}
+
 .auth-close-button:hover {
   color: #2630ea;
   border-color: #c7cdf6;
@@ -453,4 +460,31 @@
   color: #2630ea;
   font-size: inherit;
   font-weight: 900;
+}
+
+[dir="rtl"] .auth-close-button {
+  right: auto;
+  left: 22px;
+}
+
+[dir="rtl"] .auth-language-wrap {
+  right: auto;
+  left: 76px;
+}
+
+[dir="rtl"] .auth-brand,
+[dir="rtl"] .auth-benefits span,
+[dir="rtl"] .auth-role-switch button,
+[dir="rtl"] .auth-submit,
+[dir="rtl"] .auth-mode-footer {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .auth-input-wrap input {
+  padding: 0 20px 0 54px;
+}
+
+[dir="rtl"] .auth-input-wrap svg {
+  right: auto;
+  left: 22px;
 }

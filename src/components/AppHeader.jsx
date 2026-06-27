@@ -1,12 +1,16 @@
 import { LogOut, Settings, ShieldCheck } from "lucide-react";
 import React from "react";
+import { languages } from "../lib/i18n.js";
 import { initials } from "../lib/platform.js";
 
 export function AppHeader({
   currentUser,
+  language,
   onLogout,
+  onLanguageChange,
   onOpenProfile,
   onOpenSettings,
+  t,
 }) {
   return (
     <header className="topbar">
@@ -18,20 +22,21 @@ export function AppHeader({
         className="user-chip"
         onClick={() => onOpenProfile(currentUser.id)}
         type="button"
-        title="Open profile"
+        title={t.common.openProfile}
       >
         <span className="avatar">{initials(currentUser.name)}</span>
         <div>
           <strong>{currentUser.name}</strong>
-          <span>{currentUser.role === "tester" ? "Tester" : "Client"}</span>
+          <span>{currentUser.role === "tester" ? t.common.tester : t.common.client}</span>
         </div>
       </button>
       <div className="topbar-actions">
+        <LanguageSwitch language={language} onLanguageChange={onLanguageChange} t={t} />
         <button
           className="icon-button"
           onClick={onOpenSettings}
           type="button"
-          title="Account settings"
+          title={t.common.accountSettings}
         >
           <Settings size={20} />
         </button>
@@ -39,11 +44,28 @@ export function AppHeader({
           className="icon-button"
           onClick={onLogout}
           type="button"
-          title="Log out"
+          title={t.common.logout}
         >
           <LogOut size={20} />
         </button>
       </div>
     </header>
+  );
+}
+
+function LanguageSwitch({ language, onLanguageChange, t }) {
+  return (
+    <div className="language-switch" aria-label={t.common.language}>
+      {Object.entries(languages).map(([key, meta]) => (
+        <button
+          className={language === key ? "active" : ""}
+          key={key}
+          onClick={() => onLanguageChange(key)}
+          type="button"
+        >
+          {meta.short}
+        </button>
+      ))}
+    </div>
   );
 }

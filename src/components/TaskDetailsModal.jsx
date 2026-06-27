@@ -49,9 +49,12 @@ export function TaskDetailsModal({
   onViewTaskDetails,
   onViewProfile,
   state,
+  t,
   task,
   taskEditForm,
 }) {
+  const p = t.platform;
+  const statusLabel = (status) => p.status[status] || status;
   const client = state.users.find((user) => user.id === task.clientId);
   const applications = state.applications.filter((item) => item.taskId === task.id);
   const applied = applications.find((item) => item.testerId === currentUser.id);
@@ -85,22 +88,18 @@ export function TaskDetailsModal({
           {(mode !== "view" || showReports) && !showApplications && (
             <div>
               <span className={`status ${task.status}`}>
-                {task.status === "assigned"
-                  ? "Assigned"
-                  : task.status === "closed"
-                    ? "Hiring closed"
-                    : "Open"}
+                {statusLabel(task.status)}
               </span>
               <h2>
                 {mode === "edit"
-                  ? "Edit task"
+                  ? p.task.editTask
                   : showApplications
-                    ? "Applications"
-                    : "Reports"}
+                    ? p.task.applications
+                    : p.task.reports}
               </h2>
             </div>
           )}
-          <button className="icon-button" onClick={onClose} type="button" title="Close">
+          <button className="icon-button" onClick={onClose} type="button" title={p.task.close}>
             <X size={20} />
           </button>
         </div>
@@ -109,24 +108,24 @@ export function TaskDetailsModal({
           <form className="form settings-form" onSubmit={onSaveEdit}>
             <div className="form-grid">
               <label>
-                Title
+                {p.task.title}
                 <input
                   value={taskEditForm.title}
                   onChange={(event) =>
                     onEditFormChange({ ...taskEditForm, title: event.target.value })
                   }
-                  placeholder="Test a website before launch"
+                  placeholder={p.task.titlePlaceholder}
                 />
               </label>
               <label>
-                Product
+                {p.task.product}
                 <select
                   value={taskEditForm.product}
                   onChange={(event) =>
                     onEditFormChange({ ...taskEditForm, product: event.target.value })
                   }
                 >
-                  <option value="">Select product</option>
+                  <option value="">{p.task.selectProduct}</option>
                   {PRODUCT_OPTIONS.map((option) => (
                     <option key={option} value={option}>
                       {option}
@@ -136,7 +135,7 @@ export function TaskDetailsModal({
               </label>
             </div>
             <label>
-              Description
+              {p.task.description}
               <textarea
                 value={taskEditForm.description}
                 onChange={(event) =>
@@ -145,21 +144,21 @@ export function TaskDetailsModal({
                     description: event.target.value,
                   })
                 }
-                placeholder="What should be tested"
+                placeholder={p.task.descriptionPlaceholder}
               />
             </label>
             <label>
-              Expected deliverables
+              {p.task.expected}
               <textarea
                 value={taskEditForm.expected}
                 onChange={(event) =>
                   onEditFormChange({ ...taskEditForm, expected: event.target.value })
                 }
-                placeholder="Bug report, screenshots, recommendations"
+                placeholder={p.task.expectedPlaceholder}
               />
             </label>
             <label>
-              Budget, AED
+              {p.task.budgetAed}
               <input
                 value={taskEditForm.budget}
                 onChange={(event) =>
@@ -169,7 +168,7 @@ export function TaskDetailsModal({
               />
             </label>
             <label>
-              Tester places
+              {p.task.testerPlaces}
               <input
                 value={taskEditForm.slots}
                 onChange={(event) =>
@@ -179,7 +178,7 @@ export function TaskDetailsModal({
               />
             </label>
             <label>
-              Deadline
+              {p.task.deadline}
               <input
                 value={taskEditForm.deadline}
                 onChange={(event) =>
@@ -189,7 +188,7 @@ export function TaskDetailsModal({
               />
             </label>
             <label>
-              Private work link
+              {p.task.privateLink}
               <input
                 value={taskEditForm.privateLink}
                 onChange={(event) =>
@@ -216,10 +215,10 @@ export function TaskDetailsModal({
                 })}
                 type="button"
               >
-                Reset
+                {p.task.reset}
               </button>
               <button className="primary-button" type="submit">
-                <Check size={18} /> Save task
+                <Check size={18} /> {p.task.saveTask}
               </button>
             </div>
           </form>
@@ -236,9 +235,10 @@ export function TaskDetailsModal({
             slots={slots}
             state={state}
             task={task}
+            t={t}
           />
         ) : showReports ? (
-          <ReportsList reports={reports} state={state} />
+          <ReportsList reports={reports} state={state} t={t} />
         ) : (
           <div className="task-overview">
             <div className="task-overview-hero">
@@ -246,16 +246,12 @@ export function TaskDetailsModal({
                 <div className="task-title-row">
                   <h2>{task.title}</h2>
                   <span className={`status ${task.status}`}>
-                    {task.status === "assigned"
-                      ? "Assigned"
-                      : task.status === "closed"
-                        ? "Hiring closed"
-                        : "Open"}
+                    {statusLabel(task.status)}
                   </span>
                 </div>
                 <p>
                   <ClipboardList size={17} />
-                  {task.description || "No description provided."}
+                  {task.description || p.task.noDescription}
                 </p>
               </div>
               {isOwner && (
@@ -264,7 +260,7 @@ export function TaskDetailsModal({
                   onClick={onEdit}
                   type="button"
                 >
-                  <Pencil size={17} /> Edit task
+                  <Pencil size={17} /> {p.task.editTask}
                 </button>
               )}
             </div>
@@ -272,36 +268,36 @@ export function TaskDetailsModal({
             <div className="task-overview-stats">
               <OverviewTile
                 icon={<BriefcaseBusiness size={18} />}
-                label="Product"
-                value={task.product || "Not specified"}
+                label={p.task.product}
+                value={task.product || p.task.notSpecified}
               />
               <OverviewTile
                 icon={<Calendar size={18} />}
-                label="Created"
-                value={task.createdAt || "Today"}
+                label={p.task.created}
+                value={task.createdAt || p.task.today}
               />
               <OverviewTile
                 icon={<Wallet size={18} />}
-                label={currentUser.role === "tester" ? "Your payout" : "Total budget"}
+                label={currentUser.role === "tester" ? p.task.yourPayout : p.task.totalBudget}
                 value={money(currentUser.role === "tester" ? taskPayout(task) : task.budget)}
               />
               <OverviewTile
                 icon={<Calendar size={18} />}
-                label="Deadline"
+                label={p.task.deadline}
                 value={formatDeadline(task.deadline)}
               />
             </div>
 
             <div className="overview-card wide">
-              <span>Requirements and deliverables</span>
-              <strong>{task.expected || "No requirements provided."}</strong>
+              <span>{p.task.requirements}</span>
+              <strong>{task.expected || p.task.noRequirements}</strong>
             </div>
 
             <div className="overview-card-grid">
               {canViewPrivateLink && task.privateLink && (
                 <div className="overview-card link-card">
                   <span>
-                    <Link size={17} /> Private work link
+                    <Link size={17} /> {p.task.privateLink}
                   </span>
                   <a
                     className="work-link"
@@ -317,42 +313,42 @@ export function TaskDetailsModal({
 
               <OverviewPanel
                 icon={<UsersRound size={18} />}
-                label="Places"
-                value={`${selectedIds.length} / ${slots} selected`}
+                label={p.task.places}
+                value={`${selectedIds.length} / ${slots} ${p.task.selected}`}
               />
 
               <OverviewPanel
                 icon={<UserRound size={18} />}
-                label="Client"
-                value={client?.name || "Company"}
+                label={p.task.client}
+                value={client?.name || p.task.company}
                 avatar={client?.name}
               />
 
               <OverviewPanel
                 icon={<UsersRound size={18} />}
-                label="Applications"
-                value={`${applications.length} application${applications.length === 1 ? "" : "s"} submitted`}
+                label={p.task.applications}
+                value={`${applications.length} ${p.task.applications} ${p.task.submitted}`}
               />
             </div>
 
             {selectedTesters.length > 0 && (
               <div className="selected-banner">
-                <Check size={18} /> Selected testers:{" "}
+                <Check size={18} /> {p.task.selectedTesters}{" "}
                 {selectedTesters.map((tester) => tester.name).join(", ")}
               </div>
             )}
 
             {currentUser.role === "tester" && (
               <div className="detail-section">
-                <h3>Your application</h3>
+                <h3>{p.task.yourApplication}</h3>
                 {applied ? (
                   <div className={`application-state ${applied.status} state-with-action`}>
                     <span>
                       {applied.status === "selected"
-                        ? "You were selected for this task"
+                        ? p.task.selectedForTask
                         : applied.status === "rejected"
-                          ? "The client selected another tester"
-                          : "Application sent"}
+                          ? p.task.anotherTester
+                          : p.task.applicationSent}
                     </span>
                     {applied.status === "selected" && (
                       <button
@@ -360,17 +356,17 @@ export function TaskDetailsModal({
                         onClick={() => onStartTask(task.id)}
                         type="button"
                       >
-                        <Play size={17} /> Start
+                        <Play size={17} /> {p.task.start}
                       </button>
                     )}
                   </div>
                 ) : task.status === "closed" ? (
                   <div className="application-state rejected">
-                    This task is closed for new applications
+                    {p.task.taskClosed}
                   </div>
                 ) : selectedIds.length >= slots ? (
                   <div className="application-state rejected">
-                    All tester places are filled
+                    {p.task.allPlacesFilled}
                   </div>
                 ) : (
                   <div className="apply-row">
@@ -382,14 +378,14 @@ export function TaskDetailsModal({
                           [task.id]: event.target.value,
                         })
                       }
-                      placeholder="Briefly explain why you are a good fit"
+                      placeholder={p.task.applyPlaceholder}
                     />
                     <button
                       className="primary-button small"
                       onClick={() => onApply(task.id)}
                       type="button"
                     >
-                      <Send size={17} /> Apply
+                      <Send size={17} /> {p.task.apply}
                     </button>
                   </div>
                 )}
@@ -399,14 +395,14 @@ export function TaskDetailsModal({
             {isOwner && (
               <div className="overview-actions">
                 <button className="secondary-button" onClick={onClose} type="button">
-                  Close
+                  {p.task.close}
                 </button>
                 <button
                   className="primary-button view-applications-button"
                   onClick={() => onViewApplications(task.id)}
                   type="button"
                 >
-                  <UsersRound size={18} /> View applications
+                  <UsersRound size={18} /> {p.task.viewApplications}
                 </button>
               </div>
             )}
@@ -444,11 +440,12 @@ function OverviewPanel({ avatar, icon, label, value }) {
   );
 }
 
-function ReportsList({ reports, state }) {
+function ReportsList({ reports, state, t }) {
+  const p = t.platform;
   const [activeReportId, setActiveReportId] = useState("");
 
   if (reports.length === 0) {
-    return <p className="muted">No reports submitted yet.</p>;
+    return <p className="muted">{p.task.noReports}</p>;
   }
 
   return (
@@ -464,19 +461,19 @@ function ReportsList({ reports, state }) {
               type="button"
             >
               <strong>{report.title}</strong>
-              <span>By {tester?.name || "Tester"}</span>
+              <span>{p.task.by} {tester?.name || t.common.tester}</span>
               <span>{formatDeadline(report.createdAt)}</span>
             </button>
             {isOpen && (
               <div className="report-detail">
-                <DetailBlock label="Found at" value={report.location || "Not specified"} />
+                <DetailBlock label={p.task.foundAt} value={report.location || p.task.notSpecified} />
                 <div className="cv-section">
-                  <h3>Vulnerability / bug details</h3>
-                  <p>{report.vulnerability || "No details provided."}</p>
+                  <h3>{p.task.bugDetails}</h3>
+                  <p>{report.vulnerability || p.task.noDetails}</p>
                 </div>
                 <div className="cv-section">
-                  <h3>Suggested fix</h3>
-                  <p>{report.fix || "No fix suggested."}</p>
+                  <h3>{p.task.suggestedFix}</h3>
+                  <p>{report.fix || p.task.noFix}</p>
                 </div>
               </div>
             )}
@@ -499,7 +496,9 @@ function ApplicationsList({
   slots,
   state,
   task,
+  t,
 }) {
+  const p = t.platform;
   const [filter, setFilter] = useState("all");
   const [activeApplicationId, setActiveApplicationId] = useState(
     applications[0]?.id || "",
@@ -538,14 +537,14 @@ function ApplicationsList({
         <div className="applications-heading">
           <div>
             <button className="back-link" onClick={onBackToTask} type="button">
-              <ArrowLeft size={17} /> Back to task
+              <ArrowLeft size={17} /> {p.task.backToTask}
             </button>
-            <h2>Applications for {task.title}</h2>
+            <h2>{p.task.applicationsFor} {task.title}</h2>
           </div>
           <div className="applications-metrics">
-            <MetricMini value={1} label="Active task" />
-            <MetricMini value={slots} label="Places" />
-            <MetricMini value={money(task.budget)} label="Total budget" />
+            <MetricMini value={1} label={p.task.activeTask} />
+            <MetricMini value={slots} label={p.task.places} />
+            <MetricMini value={money(task.budget)} label={p.task.totalBudget} />
           </div>
         </div>
 
@@ -556,36 +555,36 @@ function ApplicationsList({
               onClick={() => setFilter("all")}
               type="button"
             >
-              Applications ({applications.length})
+              {p.task.applications} ({applications.length})
             </button>
             <button
               className={filter === "selected" ? "active" : ""}
               onClick={() => setFilter("selected")}
               type="button"
             >
-              Selected ({selectedApplications.length})
+              {p.status.selected} ({selectedApplications.length})
             </button>
-            <button type="button">Completed ({completedApplications.length})</button>
+            <button type="button">{p.tester.completed} ({completedApplications.length})</button>
           </div>
 
           <div className="applications-tools">
             <label className="applications-search">
               <Search size={17} />
-              <input placeholder="Search by name..." />
+              <input placeholder={p.task.searchByName} />
             </label>
             <button className="secondary-button small" type="button">
-              <SlidersHorizontal size={16} /> Filters
+              <SlidersHorizontal size={16} /> {p.task.filters}
             </button>
-            <select aria-label="Sort applications">
-              <option>Newest first</option>
-              <option>Top rated</option>
-              <option>Most reports</option>
+            <select aria-label={p.task.sortApplications}>
+              <option>{p.task.newestFirst}</option>
+              <option>{p.task.topRated}</option>
+              <option>{p.task.mostReports}</option>
             </select>
           </div>
 
           <div className="candidate-list">
             {visibleApplications.length === 0 && (
-              <p className="empty-state">No applicants in this group yet.</p>
+              <p className="empty-state">{p.task.noApplicants}</p>
             )}
             {visibleApplications.map((application, index) => {
               const tester = state.users.find(
@@ -608,25 +607,25 @@ function ApplicationsList({
                   <span className="avatar">{initials(tester?.name || "QA")}</span>
                   <div className="candidate-main">
                     <div className="candidate-title">
-                      <strong>{tester?.name || "Tester"}</strong>
-                      {index === 0 && <span className="tag">Top rated</span>}
+                      <strong>{tester?.name || t.common.tester}</strong>
+                      {index === 0 && <span className="tag">{p.task.topRated}</span>}
                       <span className="rating">
                         <Star size={15} fill="currentColor" /> {rating}
                       </span>
                     </div>
-                    <p>{tester?.skills || "QA Tester"}</p>
-                    <span>Applied {formatDeadline(application.createdAt || task.createdAt)}</span>
+                    <p>{tester?.skills || p.task.qaTester}</p>
+                    <span>{p.task.applied} {formatDeadline(application.createdAt || task.createdAt)}</span>
                   </div>
                   <div className="candidate-stat">
-                    <span>Reports</span>
+                    <span>{p.task.reportCount}</span>
                     <strong>{reportCount}</strong>
                   </div>
                   <div className="candidate-stat">
-                    <span>Success rate</span>
+                    <span>{p.task.successRate}</span>
                     <strong>{Math.max(91, Math.round(Number(rating) * 20))}%</strong>
                   </div>
                   <span className={`application-badge ${isSelected ? "selected" : ""}`}>
-                    {isSelected ? "Selected" : "Applied"}
+                    {isSelected ? p.status.selected : p.task.applied}
                   </span>
                 </article>
               );
@@ -637,7 +636,7 @@ function ApplicationsList({
 
       <aside className="applicant-detail-panel">
         <button className="back-link" onClick={onBackToTask} type="button">
-          <ArrowLeft size={17} /> Back to task
+          <ArrowLeft size={17} /> {p.task.backToTask}
         </button>
         {activeApplication && activeTester ? (
           <>
@@ -651,27 +650,27 @@ function ApplicationsList({
                 >
                   {activeTester.name}
                 </button>
-                <p>{activeTester.skills || "QA Tester"}</p>
-                <span>{activeIsSelected ? "Selected" : "Applied"} · {activeRating} rating</span>
+                <p>{activeTester.skills || p.task.qaTester}</p>
+                <span>{activeIsSelected ? p.status.selected : p.task.applied} · {activeRating} {p.task.rating}</span>
               </div>
-              {activeIsSelected && <span className="tag success">Selected</span>}
+              {activeIsSelected && <span className="tag success">{p.status.selected}</span>}
             </div>
 
             <div className="detail-mini-card">
-              <span>Payout for this task</span>
+              <span>{p.task.payoutForTask}</span>
               <strong>{money(taskPayout(task))}</strong>
             </div>
 
             <div className="testing-status-card">
-              <h4>Status</h4>
+              <h4>{p.task.status}</h4>
               <div className={`status-step ${activeIsSelected ? "active" : ""}`}>
                 <span />
                 <div>
-                  <strong>Testing in progress</strong>
+                  <strong>{p.task.testingInProgress}</strong>
                   <p>
                     {activeIsSelected
-                      ? "Tester can submit multiple reports. You review each one."
-                      : "Select tester to start testing."}
+                      ? p.task.selectedTestingHint
+                      : p.task.selectTesterHint}
                   </p>
                 </div>
               </div>
@@ -685,43 +684,43 @@ function ApplicationsList({
               >
                 <span />
                 <div>
-                  <strong>Complete testing</strong>
+                  <strong>{p.task.completeTesting}</strong>
                   <p>
                     {activeIsCompleted
-                      ? "Testing is marked as completed."
-                      : "Mark the testing as completed when you are satisfied."}
+                      ? p.task.completedTesting
+                      : p.task.completeTestingHint}
                   </p>
                 </div>
               </button>
               <div className={`status-step ${activeApplication.paid ? "active" : ""}`}>
                 <span />
                 <div>
-                  <strong>Payment</strong>
-                  <p>Tester will be paid {money(taskPayout(task))}.</p>
+                  <strong>{p.task.payment}</strong>
+                  <p>{p.task.willBePaid} {money(taskPayout(task))}.</p>
                 </div>
               </div>
             </div>
 
             <div className="detail-reports">
               <div className="section-row">
-                <h4>Reports ({activeReports.length})</h4>
+                <h4>{p.task.reports} ({activeReports.length})</h4>
                 <button
                   className="secondary-button small"
                   disabled={activeReports.length === 0}
                   onClick={() => setReportsOpen(true)}
                   type="button"
                 >
-                  View all reports
+                  {p.task.viewAllReports}
                 </button>
               </div>
               {activeReports.length === 0 ? (
-                <p className="muted">No reports from this tester yet.</p>
+                <p className="muted">{p.task.noTesterReports}</p>
               ) : (
                 activeReports.map((report, index) => (
                   <button className="report-mini-row" key={report.id} type="button">
                     <strong>#{activeReports.length - index}</strong>
                     <span>{formatDeadline(report.createdAt)}</span>
-                    <em>{index === 0 ? "Pending review" : "Approved"}</em>
+                    <em>{index === 0 ? p.task.pendingReview : p.task.approved}</em>
                   </button>
                 ))
               )}
@@ -729,7 +728,7 @@ function ApplicationsList({
 
             <div className="applicant-detail-actions">
               <button className="secondary-button" type="button">
-                <MessageSquare size={17} /> Message tester
+                <MessageSquare size={17} /> {p.task.messageTester}
               </button>
               {activeIsSelected ? (
                 <button
@@ -739,10 +738,10 @@ function ApplicationsList({
                   type="button"
                 >
                   {activeApplication.paid
-                    ? "Paid"
+                    ? p.task.paid
                     : activeIsCompleted
-                      ? `Pay ${money(taskPayout(task))}`
-                      : "Complete testing first"}
+                      ? `${p.task.pay} ${money(taskPayout(task))}`
+                      : p.task.completeFirst}
                 </button>
               ) : (
                 <button
@@ -751,13 +750,13 @@ function ApplicationsList({
                   onClick={() => onChooseTester(task.id, activeApplication.testerId)}
                   type="button"
                 >
-                  Select tester
+                  {p.task.selectTester}
                 </button>
               )}
             </div>
           </>
         ) : (
-          <p className="empty-state">Select an applicant to view details.</p>
+          <p className="empty-state">{p.task.selectApplicant}</p>
         )}
       </aside>
 
@@ -765,6 +764,7 @@ function ApplicationsList({
         <ReportsViewerModal
           onClose={() => setReportsOpen(false)}
           reports={activeReports}
+          t={t}
           task={task}
           tester={activeTester}
         />
@@ -773,7 +773,8 @@ function ApplicationsList({
   );
 }
 
-function ReportsViewerModal({ onClose, reports, task, tester }) {
+function ReportsViewerModal({ onClose, reports, t, task, tester }) {
+  const p = t.platform;
   const [activeReportId, setActiveReportId] = useState(reports[0]?.id || "");
   const activeReport =
     reports.find((report) => report.id === activeReportId) || reports[0];
@@ -783,11 +784,11 @@ function ReportsViewerModal({ onClose, reports, task, tester }) {
       <section className="reports-viewer-modal" role="dialog" aria-modal="true">
         <div className="modal-header">
           <div>
-            <span className="step-pill">Reports</span>
-            <h2>{tester?.name || "Tester"} reports</h2>
+            <span className="step-pill">{p.task.reports}</span>
+            <h2>{tester?.name || t.common.tester} {p.task.reportsOf}</h2>
             <p className="muted">{task.title}</p>
           </div>
-          <button className="icon-button" onClick={onClose} type="button" title="Close">
+          <button className="icon-button" onClick={onClose} type="button" title={p.task.close}>
             <X size={20} />
           </button>
         </div>
@@ -812,20 +813,20 @@ function ReportsViewerModal({ onClose, reports, task, tester }) {
           {activeReport ? (
             <article className="report-viewer-detail">
               <DetailBlock
-                label="Found at"
-                value={activeReport.location || "Not specified"}
+                label={p.task.foundAt}
+                value={activeReport.location || p.task.notSpecified}
               />
               <div className="cv-section">
-                <h3>Vulnerability / bug details</h3>
-                <p>{activeReport.vulnerability || "No details provided."}</p>
+                <h3>{p.task.bugDetails}</h3>
+                <p>{activeReport.vulnerability || p.task.noDetails}</p>
               </div>
               <div className="cv-section">
-                <h3>Suggested fix</h3>
-                <p>{activeReport.fix || "No fix suggested."}</p>
+                <h3>{p.task.suggestedFix}</h3>
+                <p>{activeReport.fix || p.task.noFix}</p>
               </div>
             </article>
           ) : (
-            <p className="empty-state">No reports to show.</p>
+            <p className="empty-state">{p.task.noReportsToShow}</p>
           )}
         </div>
       </section>

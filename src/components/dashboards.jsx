@@ -99,8 +99,10 @@ export function TesterDashboard({
   onViewChange,
   search,
   state,
+  t,
   view,
 }) {
+  const p = t.platform;
   const [activeReportId, setActiveReportId] = useState("");
   const myApplications = state.applications.filter(
     (item) => item.testerId === currentUser.id,
@@ -178,40 +180,40 @@ export function TesterDashboard({
             onClick={() => onViewChange("available")}
             type="button"
           >
-            <ClipboardList size={17} /> All tasks
+            <ClipboardList size={17} /> {p.nav.allTasks}
           </button>
           <button
             className={view === "my-tasks" ? "active" : ""}
             onClick={() => onViewChange("my-tasks")}
             type="button"
           >
-            <ListChecks size={17} /> My tasks
+            <ListChecks size={17} /> {p.nav.myTasks}
           </button>
           <button type="button">
-            <BriefcaseBusiness size={17} /> Applications
+            <BriefcaseBusiness size={17} /> {p.nav.applications}
           </button>
           <button
             className={isReportsView ? "active" : ""}
             onClick={() => onViewChange("reports")}
             type="button"
           >
-            <BarChart3 size={17} /> Reports
+            <BarChart3 size={17} /> {p.nav.reports}
           </button>
           <button
             className={isPaymentsView ? "active" : ""}
             onClick={() => onViewChange("payments")}
             type="button"
           >
-            <Wallet size={17} /> Payments
+            <Wallet size={17} /> {p.nav.payments}
           </button>
           <button type="button">
-            <MessageSquare size={17} /> Messages
+            <MessageSquare size={17} /> {p.nav.messages}
           </button>
           <button type="button">
-            <UserRound size={17} /> Profile
+            <UserRound size={17} /> {p.nav.profile}
           </button>
           <button type="button">
-            <Settings size={17} /> Settings
+            <Settings size={17} /> {p.nav.settings}
           </button>
         </nav>
       </aside>
@@ -221,19 +223,19 @@ export function TesterDashboard({
           <div>
             <div className="tester-board-heading">
               <div>
-                <h1>My reports</h1>
-                <p>All bug reports you have submitted across tasks.</p>
+                <h1>{p.tester.myReports}</h1>
+                <p>{p.tester.reportsSubtitle}</p>
               </div>
               <div className="tester-metrics">
-                <Metric value={myReports.length} label="Reports" />
-                <Metric value={reportedTaskIds.size} label="Tasks covered" />
-                <Metric value={myReports.filter((report) => report.location).length} label="With location" />
-                <Metric value={myReports.filter((report) => report.fix).length} label="With fix" />
+                <Metric value={myReports.length} label={p.nav.reports} />
+                <Metric value={reportedTaskIds.size} label={p.tester.tasksCovered} />
+                <Metric value={myReports.filter((report) => report.location).length} label={p.tester.withLocation} />
+                <Metric value={myReports.filter((report) => report.fix).length} label={p.tester.withFix} />
               </div>
             </div>
 
             {myReports.length === 0 ? (
-              <p className="empty-state">You have not submitted any reports yet.</p>
+              <p className="empty-state">{p.tester.noReports}</p>
             ) : (
               <div className="reports-viewer-grid">
                 <div className="reports-viewer-list">
@@ -248,7 +250,7 @@ export function TesterDashboard({
                           type="button"
                         >
                           <strong>{report.title}</strong>
-                          <span>{task?.title || "Deleted task"}</span>
+                          <span>{task?.title || p.tester.deletedTask}</span>
                         </button>
                       </article>
                     );
@@ -259,23 +261,23 @@ export function TesterDashboard({
                   <article className="report-viewer-detail">
                     <h3>
                       {state.tasks.find((item) => item.id === activeReport.taskId)?.title ||
-                        "Deleted task"}
+                        p.tester.deletedTask}
                     </h3>
                     <div className="cv-section">
-                      <h3>Submitted at</h3>
+                      <h3>{p.tester.submittedAt}</h3>
                       <p>{formatDeadline(activeReport.createdAt)}</p>
                     </div>
                     <div className="cv-section">
-                      <h3>Found at</h3>
-                      <p>{activeReport.location || "Not specified"}</p>
+                      <h3>{p.tester.foundAt}</h3>
+                      <p>{activeReport.location || p.tester.notSpecified}</p>
                     </div>
                     <div className="cv-section">
-                      <h3>Vulnerability / bug details</h3>
-                      <p>{activeReport.vulnerability || "No details provided."}</p>
+                      <h3>{p.tester.bugDetails}</h3>
+                      <p>{activeReport.vulnerability || p.tester.noDetails}</p>
                     </div>
                     <div className="cv-section">
-                      <h3>Suggested fix</h3>
-                      <p>{activeReport.fix || "No fix suggested."}</p>
+                      <h3>{p.tester.suggestedFix}</h3>
+                      <p>{activeReport.fix || p.tester.noFix}</p>
                     </div>
                   </article>
                 )}
@@ -284,45 +286,46 @@ export function TesterDashboard({
           </div>
         ) : isPaymentsView ? (
           <PaymentsPanel
-            title="Tester payments"
-            subtitle="Track what you earned and what is still waiting for client payment."
+            title={p.tester.paymentsTitle}
+            subtitle={p.tester.paymentsSubtitle}
             metrics={[
-              ["Earned", money(earnedTotal)],
-              ["Pending payout", money(pendingTotal)],
-              ["Paid tasks", testerPayments.filter((row) => row.application.paid).length],
-              ["Selected tasks", testerPayments.length],
+              [p.tester.earned, money(earnedTotal)],
+              [p.tester.pendingPayout, money(pendingTotal)],
+              [p.tester.paidTasks, testerPayments.filter((row) => row.application.paid).length],
+              [p.tester.selectedTasks, testerPayments.length],
             ]}
             rows={testerPayments.map((row) => ({
               amount: money(row.payout),
               detail: row.application.paid
-                ? "Paid to your balance"
+                ? p.tester.paidToBalance
                 : row.application.completed
-                  ? "Ready for payment"
-                  : "Testing in progress",
+                  ? p.tester.readyForPayment
+                  : p.tester.testingInProgress,
               status: row.application.paid
-                ? "Paid"
+                ? p.status.paid
                 : row.application.completed
-                  ? "Awaiting payment"
-                  : "Pending",
+                  ? p.status.awaitingPayment
+                  : p.status.pending,
               title: row.task.title,
             }))}
+            emptyLabel={p.payments.noRecords}
           />
         ) : (
           <>
         <div className="tester-board-heading">
           <div>
-            <h1>{isMyTasksView ? "My tasks" : "Available tasks"}</h1>
+            <h1>{isMyTasksView ? p.tester.selectedTasksTitle : p.tester.availableTasks}</h1>
             <p>
               {isMyTasksView
-                ? "Tasks where the client selected you"
-                : "Browse and apply to tasks that match your skills"}
+                ? p.tester.selectedSubtitle
+                : p.tester.availableSubtitle}
             </p>
           </div>
           <div className="tester-metrics">
-            <Metric value={visibleTasks.length} label={isMyTasksView ? "Selected" : "Available"} />
-            <Metric value={appliedCount} label="Applied" />
-            <Metric value={inProgressCount} label="In progress" />
-            <Metric value={completedCount} label="Completed" />
+            <Metric value={visibleTasks.length} label={isMyTasksView ? p.status.selected : p.tester.available} />
+            <Metric value={appliedCount} label={p.tester.applied} />
+            <Metric value={inProgressCount} label={p.tester.inProgress} />
+            <Metric value={completedCount} label={p.tester.completed} />
           </div>
         </div>
 
@@ -332,19 +335,19 @@ export function TesterDashboard({
             <input
               value={search}
               onChange={(event) => onSearch(event.target.value)}
-              placeholder="Search tasks by name or keyword..."
+              placeholder={p.tester.searchPlaceholder}
             />
           </label>
-          <button className="secondary-button" type="button">All categories</button>
-          <button className="secondary-button" type="button">All platforms</button>
-          <button className="secondary-button" type="button">Budget</button>
+          <button className="secondary-button" type="button">{p.tester.allCategories}</button>
+          <button className="secondary-button" type="button">{p.tester.allPlatforms}</button>
+          <button className="secondary-button" type="button">{p.tester.budget}</button>
           <button className="secondary-button" type="button">
-            <SlidersHorizontal size={17} /> Filters
+            <SlidersHorizontal size={17} /> {p.tester.filters}
           </button>
           <select className="sort-select" aria-label="Sort tasks">
-            <option>Newest first</option>
-            <option>Highest payout</option>
-            <option>Closest deadline</option>
+            <option>{p.tester.newestFirst}</option>
+            <option>{p.tester.highestPayout}</option>
+            <option>{p.tester.closestDeadline}</option>
           </select>
         </div>
 
@@ -352,8 +355,8 @@ export function TesterDashboard({
           {visibleTasks.length === 0 && (
             <p className="empty-state">
               {isMyTasksView
-                ? "You have not been selected for any tasks yet."
-                : "No tasks found."}
+                ? p.tester.notSelectedYet
+                : p.tester.noTasksFound}
             </p>
           )}
           {visibleTasks.map((task) => {
@@ -377,24 +380,24 @@ export function TesterDashboard({
                     <h2>{task.title}</h2>
                     <span className={`status ${task.status}`}>
                       {task.status === "assigned"
-                        ? "Assigned"
+                        ? p.status.assigned
                         : task.status === "closed"
-                          ? "Hiring closed"
-                          : "New"}
+                          ? p.status.closed
+                          : p.status.new}
                     </span>
                   </div>
-                  <p>{task.description || "No description provided."}</p>
+                  <p>{task.description || p.tester.noDescription}</p>
                   <div className="task-chip-row">
-                    <span>{task.product || "Product"}</span>
-                    {task.expected && <span>Bug Reporting</span>}
-                    <span>{client?.name || "Client"}</span>
+                    <span>{task.product || p.tester.product}</span>
+                    {task.expected && <span>{p.tester.bugReporting}</span>}
+                    <span>{client?.name || p.tester.client}</span>
                   </div>
                 </div>
 
                 <div className="tester-task-facts">
-                  <span><Wallet size={17} /> Budget per tester <strong>{money(taskPayout(task))}</strong></span>
-                  <span><UsersRound size={17} /> Places <strong>{taskSlots(task)}</strong></span>
-                  <span><Calendar size={17} /> Deadline <strong>{formatDeadline(task.deadline)}</strong></span>
+                  <span><Wallet size={17} /> {p.tester.budgetPerTester} <strong>{money(taskPayout(task))}</strong></span>
+                  <span><UsersRound size={17} /> {p.tester.places} <strong>{taskSlots(task)}</strong></span>
+                  <span><Calendar size={17} /> {p.tester.deadline} <strong>{formatDeadline(task.deadline)}</strong></span>
                 </div>
 
                 <div className="tester-task-actions">
@@ -406,7 +409,7 @@ export function TesterDashboard({
                     }}
                     type="button"
                   >
-                    <Eye size={17} /> View details
+                    <Eye size={17} /> {p.tester.viewDetails}
                   </button>
                   {applied?.status === "selected" && (
                     <button
@@ -417,7 +420,7 @@ export function TesterDashboard({
                       }}
                       type="button"
                     >
-                      <Play size={17} /> Start
+                      <Play size={17} /> {p.tester.start}
                     </button>
                   )}
                 </div>
@@ -433,7 +436,7 @@ export function TesterDashboard({
                           [task.id]: event.target.value,
                         })
                       }
-                      placeholder="Briefly explain why you are a good fit"
+                      placeholder={p.tester.applyPlaceholder}
                     />
                     <button
                       className="primary-button small"
@@ -443,7 +446,7 @@ export function TesterDashboard({
                       }}
                       type="button"
                     >
-                      <Send size={17} /> Apply
+                      <Send size={17} /> {p.tester.apply}
                     </button>
                   </div>
                 )}
@@ -468,8 +471,10 @@ export function ClientDashboard({
   onViewTask,
   onTaskFormChange,
   state,
+  t,
   taskForm,
 }) {
+  const p = t.platform;
   const [createOpen, setCreateOpen] = useState(false);
   const [openActionTaskId, setOpenActionTaskId] = useState("");
   const [clientSection, setClientSection] = useState("tasks");
@@ -496,7 +501,7 @@ export function ClientDashboard({
           onClick={() => setCreateOpen(true)}
           type="button"
         >
-          <Plus size={18} /> New task
+          <Plus size={18} /> {p.client.newTask}
         </button>
         <nav className="applications-nav">
           <button
@@ -504,59 +509,60 @@ export function ClientDashboard({
             onClick={() => setClientSection("tasks")}
             type="button"
           >
-            <BriefcaseBusiness size={17} /> My tasks
+            <BriefcaseBusiness size={17} /> {p.client.myTasks}
           </button>
           <button type="button">
-            <UsersRound size={17} /> Applications
+            <UsersRound size={17} /> {p.nav.applications}
           </button>
           <button type="button">
-            <FileTextIcon /> Reports
+            <FileTextIcon /> {p.nav.reports}
           </button>
           <button
             className={clientSection === "payments" ? "active" : ""}
             onClick={() => setClientSection("payments")}
             type="button"
           >
-            <Wallet size={17} /> Payments
+            <Wallet size={17} /> {p.nav.payments}
           </button>
           <button type="button">
-            <MessageSquare size={17} /> Messages
+            <MessageSquare size={17} /> {p.nav.messages}
           </button>
           <button type="button">
-            <Settings size={17} /> Settings
+            <Settings size={17} /> {p.nav.settings}
           </button>
         </nav>
       </aside>
       <section className="client-main-panel">
         {clientSection === "payments" ? (
           <PaymentsPanel
-            title="Client payments"
-            subtitle="Track task budgets, paid testers, and remaining balance."
+            title={p.client.paymentsTitle}
+            subtitle={p.client.paymentsSubtitle}
             metrics={[
-              ["Total budget", money(totalBudget)],
-              ["Paid", money(totalPaid)],
-              ["Reserved unpaid", money(totalReserved)],
-              ["Remaining balance", money(totalRemaining)],
+              [p.client.totalBudget, money(totalBudget)],
+              [p.client.paid, money(totalPaid)],
+              [p.client.reservedUnpaid, money(totalReserved)],
+              [p.client.remainingBalance, money(totalRemaining)],
             ]}
             rows={clientPayments.map((row) => ({
               amount: money(row.task.budget),
-              detail: `${row.selectedCount} selected · ${row.paidCount} paid · ${money(row.payout)} per tester`,
-              status: `${money(row.remaining)} left`,
+              detail: `${row.selectedCount} ${p.client.selectedPaid} · ${row.paidCount} ${p.client.paidCount} · ${money(row.payout)} ${p.client.perTester}`,
+              status: `${money(row.remaining)} ${p.client.left}`,
               title: row.task.title,
             }))}
+            emptyLabel={p.payments.noRecords}
           />
         ) : (
           <>
         <div className="client-toolbar">
-          <h1>My tasks and applications</h1>
+          <h1>{p.client.heading}</h1>
 
           <div className="client-toolbar-actions">
             <div className="stats-row compact-stats">
-              <Metric value={myTasks.length} label="tasks" />
-              <Metric value={applicationCount} label="applications" />
+              <Metric value={myTasks.length} label={p.client.tasks} />
+              <Metric value={applicationCount} label={p.client.applications} />
             </div>
             <button className="secondary-button small filter-control" type="button">
-              <SlidersHorizontal size={17} /> Filters
+              <SlidersHorizontal size={17} /> {p.tester.filters}
             </button>
           </div>
         </div>
@@ -564,7 +570,7 @@ export function ClientDashboard({
         <div className="client-task-grid">
           {myTasks.length === 0 && (
             <p className="empty-state client-empty-state">
-              No tasks yet. Create your first beta testing task.
+              {p.client.noTasks}
             </p>
           )}
           {myTasks.map((task) => {
@@ -590,7 +596,7 @@ export function ClientDashboard({
                     setOpenActionTaskId(openActionTaskId === task.id ? "" : task.id);
                   }}
                   type="button"
-                  title="Task actions"
+                  title={p.client.taskActions}
                 >
                   <MoreHorizontal size={19} />
                 </button>
@@ -605,11 +611,11 @@ export function ClientDashboard({
                     >
                       {task.status === "closed" ? (
                         <>
-                          <Play size={16} /> Reopen hiring
+                          <Play size={16} /> {p.client.reopenHiring}
                         </>
                       ) : (
                         <>
-                          <Pause size={16} /> Stop hiring
+                          <Pause size={16} /> {p.client.stopHiring}
                         </>
                       )}
                     </button>
@@ -621,7 +627,7 @@ export function ClientDashboard({
                       }}
                       type="button"
                     >
-                      <Trash2 size={16} /> Delete task
+                      <Trash2 size={16} /> {p.client.deleteTask}
                     </button>
                   </div>
                 )}
@@ -629,10 +635,10 @@ export function ClientDashboard({
                 <div className="client-task-body">
                   <span className={`status ${task.status}`}>
                     {task.status === "assigned"
-                      ? "Assigned"
+                      ? p.status.assigned
                       : task.status === "closed"
-                        ? "Hiring closed"
-                        : "Open"}
+                        ? p.status.closed
+                        : p.status.open}
                   </span>
                   <h2>{task.title}</h2>
                   <p className="task-product">{task.product}</p>
@@ -640,15 +646,15 @@ export function ClientDashboard({
 
                   <div className="client-task-meta">
                     <span>
-                      <small>Places</small>
+                      <small>{p.tester.places}</small>
                       <strong>{selectedIds.length}/{taskSlots(task)}</strong>
                     </span>
                     <span>
-                      <small>Payout per tester</small>
+                      <small>{p.client.payoutPerTester}</small>
                       <strong>{money(taskPayout(task))}</strong>
                     </span>
                     <span>
-                      <small>Deadline</small>
+                      <small>{p.client.deadline}</small>
                       <strong>{formatDeadline(task.deadline)}</strong>
                     </span>
                   </div>
@@ -664,7 +670,7 @@ export function ClientDashboard({
                     }}
                     type="button"
                   >
-                    <Eye size={17} /> View task
+                    <Eye size={17} /> {p.client.viewTask}
                   </button>
                   <button
                     className="secondary-button small"
@@ -674,19 +680,18 @@ export function ClientDashboard({
                     }}
                     type="button"
                   >
-                    <UsersRound size={17} /> Applications
+                    <UsersRound size={17} /> {p.nav.applications}
                   </button>
                 </div>
 
                 {selected.length > 0 && (
                   <div className="selected-banner">
-                    <Check size={18} /> Selected testers:{" "}
+                    <Check size={18} /> {p.client.selectedTesters}{" "}
                     {selected.map((tester) => tester.name).join(", ")}
                   </div>
                 )}
                 <p className="application-summary">
-                  {applications.length} application
-                  {applications.length === 1 ? "" : "s"} submitted
+                  {applications.length} {p.client.application} {p.client.submitted}
                 </p>
               </article>
             );
@@ -701,13 +706,13 @@ export function ClientDashboard({
           <section className="settings-modal create-task-modal" role="dialog" aria-modal="true">
             <div className="modal-header">
               <div>
-                <span className="step-pill">New task</span>
-                <h2>Create new task</h2>
+                <span className="step-pill">{p.client.newTask}</span>
+                <h2>{p.client.createTask}</h2>
               </div>
               <button
                 className="icon-button"
                 onClick={() => setCreateOpen(false)}
-                title="Close"
+                title={p.settings.close}
                 type="button"
               >
                 <X size={20} />
@@ -717,34 +722,34 @@ export function ClientDashboard({
             <form className="form settings-form" onSubmit={handleCreateTask}>
               <div className="form-grid">
                 <label>
-                  Title
+                  {p.client.title}
                   <input
                     value={taskForm.title}
                     onChange={(event) =>
                       onTaskFormChange({ ...taskForm, title: event.target.value })
                     }
-                    placeholder="Enter task title"
+                    placeholder={p.client.titlePlaceholder}
                   />
                 </label>
                 <label>
-                  Budget, AED
+                  {p.client.budgetAed}
                   <input
                     value={taskForm.budget}
                     onChange={(event) =>
                       onTaskFormChange({ ...taskForm, budget: event.target.value })
                     }
-                    placeholder="Enter budget"
+                    placeholder={p.client.budgetPlaceholder}
                   />
                 </label>
                 <label>
-                  Product
+                  {p.client.product}
                   <select
                     value={taskForm.product}
                     onChange={(event) =>
                       onTaskFormChange({ ...taskForm, product: event.target.value })
                     }
                   >
-                    <option value="">Select product</option>
+                    <option value="">{p.client.selectProduct}</option>
                     {PRODUCT_OPTIONS.map((option) => (
                       <option key={option} value={option}>
                         {option}
@@ -753,39 +758,39 @@ export function ClientDashboard({
                   </select>
                 </label>
                 <label>
-                  Tester places
+                  {p.client.testerPlaces}
                   <input
                     value={taskForm.slots}
                     onChange={(event) =>
                       onTaskFormChange({ ...taskForm, slots: event.target.value })
                     }
-                    placeholder="Enter number of places"
+                    placeholder={p.client.placesPlaceholder}
                   />
                 </label>
               </div>
               <label>
-                Description
+                {p.client.description}
                 <textarea
                   value={taskForm.description}
                   onChange={(event) =>
                     onTaskFormChange({ ...taskForm, description: event.target.value })
                   }
-                  placeholder="Describe what should be tested"
+                  placeholder={p.client.descriptionPlaceholder}
                 />
               </label>
               <div className="form-grid">
                 <label>
-                  Expected deliverables
+                  {p.client.expected}
                   <textarea
                     value={taskForm.expected}
                     onChange={(event) =>
                       onTaskFormChange({ ...taskForm, expected: event.target.value })
                     }
-                    placeholder="What should testers deliver?"
+                    placeholder={p.client.expectedPlaceholder}
                   />
                 </label>
                 <label>
-                  Deadline
+                  {p.client.deadline}
                   <input
                     value={taskForm.deadline}
                     onChange={(event) =>
@@ -796,7 +801,7 @@ export function ClientDashboard({
                 </label>
               </div>
               <label>
-                Private work link
+                {p.client.privateLink}
                 <input
                   value={taskForm.privateLink}
                   onChange={(event) =>
@@ -812,10 +817,10 @@ export function ClientDashboard({
                   onClick={() => setCreateOpen(false)}
                   type="button"
                 >
-                  Cancel
+                  {p.client.cancel}
                 </button>
                 <button className="primary-button" type="submit">
-                  <Plus size={18} /> Create task
+                  <Plus size={18} /> {p.client.create}
                 </button>
               </div>
             </form>
@@ -830,7 +835,7 @@ function FileTextIcon() {
   return <ClipboardList size={17} />;
 }
 
-function PaymentsPanel({ metrics, rows, subtitle, title }) {
+function PaymentsPanel({ emptyLabel, metrics, rows, subtitle, title }) {
   return (
     <div className="payments-panel">
       <div className="payments-heading">
@@ -852,7 +857,7 @@ function PaymentsPanel({ metrics, rows, subtitle, title }) {
 
       <div className="payments-table">
         {rows.length === 0 ? (
-          <p className="empty-state">No payment records yet.</p>
+          <p className="empty-state">{emptyLabel}</p>
         ) : (
           rows.map((row) => (
             <article className="payment-row" key={row.title}>

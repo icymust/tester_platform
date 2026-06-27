@@ -17,125 +17,82 @@ import {
   Zap,
 } from "lucide-react";
 import React from "react";
+import { languages } from "../lib/i18n.js";
 
-const processSteps = [
-  {
-    icon: ClipboardPenLine,
-    title: "1. Post a task",
-    text: "Describe your product, set the scope and budget.",
-  },
-  {
-    icon: UsersRound,
-    title: "2. Get testers",
-    text: "Skilled testers apply to your task.",
-  },
-  {
-    icon: SearchCheck,
-    title: "3. Real testing",
-    text: "Testers explore, find bugs, and submit reports.",
-  },
-  {
-    icon: ClipboardCheck,
-    title: "4. Review reports",
-    text: "Review results, request changes if needed.",
-  },
-  {
-    icon: WalletCards,
-    title: "5. Pay & ship",
-    text: "Approve, pay testers, and ship with confidence.",
-  },
+const processIcons = [ClipboardPenLine, UsersRound, SearchCheck, ClipboardCheck, WalletCards];
+const benefitIcons = [
+  { icon: ShieldCheck, tone: "purple" },
+  { icon: FileText, tone: "green" },
+  { icon: LockKeyhole, tone: "gold" },
+  { icon: Zap, tone: "blue" },
 ];
 
-const benefits = [
-  {
-    icon: ShieldCheck,
-    title: "High-quality testers",
-    text: "Work with verified testers who have proven experience and strong ratings.",
-    tone: "purple",
-  },
-  {
-    icon: FileText,
-    title: "Structured reports",
-    text: "Get clear, actionable reports with steps, screenshots, and suggested fixes.",
-    tone: "green",
-  },
-  {
-    icon: LockKeyhole,
-    title: "Secure payments",
-    text: "Escrow payments protect both you and testers. Pay only for approved work.",
-    tone: "gold",
-  },
-  {
-    icon: Zap,
-    title: "Faster releases",
-    text: "Find issues early, reduce risks, and release better products, faster.",
-    tone: "blue",
-  },
-];
+export function LandingPage({
+  language,
+  onLanguageChange,
+  onOpenRegister,
+  onOpenSignIn,
+  t,
+}) {
+  const processSteps = t.landing.how.steps.map(([title, text], index) => ({
+    icon: processIcons[index],
+    title,
+    text,
+  }));
+  const benefits = t.landing.how.benefits.map(([title, text], index) => ({
+    ...benefitIcons[index],
+    title,
+    text,
+  }));
 
-const testerFeatures = [
-  "Apply to matching beta tasks",
-  "Submit bug reports in a clear format",
-  "Track assigned work and payments",
-];
-
-const clientFeatures = [
-  "Publish tasks with scope and budget",
-  "Review applicants before assigning work",
-  "Approve reports and pay only for completed work",
-];
-
-export function LandingPage({ onOpenAuth, onOpenRegister, onOpenSignIn }) {
   return (
     <main className="landing-shell">
       <header className="landing-topbar">
         <div className="brand compact">
           <ShieldCheck size={34} />
-          <span>BetaHub</span>
+          <span>{t.common.betaHub}</span>
         </div>
 
         <nav className="landing-nav" aria-label="Main navigation">
-          <a href="#how-it-works">How it works</a>
-          <a href="#for-testers">For testers</a>
-          <a href="#for-clients">For clients</a>
-          <a href="#pricing">Pricing</a>
+          <a href="#how-it-works">{t.landing.nav.how}</a>
+          <a href="#for-testers">{t.landing.nav.testers}</a>
+          <a href="#for-clients">{t.landing.nav.clients}</a>
+          <a href="#pricing">{t.landing.nav.pricing}</a>
         </nav>
 
         <div className="landing-topbar-actions">
+          <LanguageSwitch language={language} onLanguageChange={onLanguageChange} />
           <button className="landing-link-button" onClick={onOpenSignIn} type="button">
-            Log in
+            {t.common.login}
           </button>
           <button className="landing-primary-button" onClick={onOpenRegister} type="button">
-            Get started
+            {t.common.getStarted}
           </button>
         </div>
       </header>
 
       <section className="landing-hero">
         <div className="landing-copy">
-          <span className="step-pill">QA marketplace for modern teams</span>
+          <span className="step-pill">{t.landing.hero.pill}</span>
           <h1>
-            Better testing.
-            <span>Better products.</span>
+            {t.landing.hero.titleA}
+            <span>{t.landing.hero.titleB}</span>
           </h1>
-          <p>
-            BetaHub connects product teams with skilled testers. Post tasks, get
-            real feedback, and ship with confidence.
-          </p>
+          <p>{t.landing.hero.text}</p>
 
           <div className="landing-actions">
             <button className="landing-primary-button wide" onClick={() => onOpenRegister("client")} type="button">
-              I'm a client <UsersRound size={17} />
+              {t.landing.hero.clientCta} <UsersRound size={17} />
             </button>
             <button className="landing-secondary-button wide" onClick={() => onOpenRegister("tester")} type="button">
-              I'm a tester <UserRound size={17} />
+              {t.landing.hero.testerCta} <UserRound size={17} />
             </button>
           </div>
 
           <div className="landing-trust-row">
-            <span><ShieldCheck size={17} /> Verified testers</span>
-            <span><ClipboardCheck size={17} /> Structured reports</span>
-            <span><BadgeCheck size={17} /> Secure payments</span>
+            <span><ShieldCheck size={17} /> {t.landing.hero.verified}</span>
+            <span><ClipboardCheck size={17} /> {t.landing.hero.reports}</span>
+            <span><BadgeCheck size={17} /> {t.landing.hero.payments}</span>
           </div>
         </div>
 
@@ -147,33 +104,33 @@ export function LandingPage({ onOpenAuth, onOpenRegister, onOpenSignIn }) {
               ))}
             </aside>
             <div className="landing-dashboard-main">
-              <h2>My tasks</h2>
+              <h2>{t.landing.dashboard.myTasks}</h2>
               <div className="landing-stats-grid">
-                <Stat value="12" label="Active tasks" />
-                <Stat value="28" label="Applications" />
-                <Stat value="18" label="Reports" />
-                <Stat value="6" label="Completed" />
+                <Stat value="12" label={t.landing.dashboard.activeTasks} />
+                <Stat value="28" label={t.landing.dashboard.applications} />
+                <Stat value="18" label={t.landing.dashboard.reports} />
+                <Stat value="6" label={t.landing.dashboard.completed} />
               </div>
               <div className="landing-dashboard-content">
                 <section className="landing-activity">
-                  <h3>Recent activity</h3>
-                  <Activity name="New application" detail='alice.dev applied to "iOS App Testing"' time="2 min ago" />
-                  <Activity name="Report submitted" detail="bob_the_tester submitted a report" time="15 min ago" />
-                  <Activity name="Task completed" detail="Website Testing is completed" time="1 h ago" done />
-                  <Activity name="Payment sent" detail="Payment sent to john.doe" time="2 h ago" />
+                  <h3>{t.landing.dashboard.recentActivity}</h3>
+                  <Activity name={t.landing.dashboard.newApplication} detail={t.landing.dashboard.newApplicationDetail} time="2 min ago" />
+                  <Activity name={t.landing.dashboard.reportSubmitted} detail={t.landing.dashboard.reportSubmittedDetail} time="15 min ago" />
+                  <Activity name={t.landing.dashboard.taskCompleted} detail={t.landing.dashboard.taskCompletedDetail} time="1 h ago" done />
+                  <Activity name={t.landing.dashboard.paymentSent} detail={t.landing.dashboard.paymentSentDetail} time="2 h ago" />
                 </section>
                 <section className="landing-report-card">
-                  <h3>Reports overview</h3>
+                  <h3>{t.landing.dashboard.reportsOverview}</h3>
                   <div className="landing-donut">
                     <strong>24</strong>
-                    <span>Total</span>
+                    <span>{t.landing.dashboard.total}</span>
                   </div>
                   <div className="landing-report-legend">
-                    <span className="approved">12 Approved</span>
-                    <span className="pending">8 Pending</span>
-                    <span className="changes">4 Changes requested</span>
+                    <span className="approved">{t.landing.dashboard.approved}</span>
+                    <span className="pending">{t.landing.dashboard.pending}</span>
+                    <span className="changes">{t.landing.dashboard.changes}</span>
                   </div>
-                  <h3>Top testers</h3>
+                  <h3>{t.landing.dashboard.topTesters}</h3>
                   <Tester name="alice.dev" score="4.9" reports="" />
                   <Tester name="dom2" score="4.8" reports=""/>
                   <Tester name="bob_the_tester" score="4.7" reports="" />
@@ -188,20 +145,17 @@ export function LandingPage({ onOpenAuth, onOpenRegister, onOpenSignIn }) {
 
       <section className="landing-split-section" id="for-testers">
         <div>
-          <span className="landing-section-kicker">For testers</span>
-          <h2>Find paid testing tasks and build your QA profile.</h2>
-          <p>
-            Testers can browse available projects, apply with a short message,
-            complete assigned work, and submit reports that clients can review quickly.
-          </p>
+          <span className="landing-section-kicker">{t.landing.testers.kicker}</span>
+          <h2>{t.landing.testers.title}</h2>
+          <p>{t.landing.testers.text}</p>
           <button className="landing-secondary-button" onClick={() => onOpenRegister("tester")} type="button">
-            Start as tester <UserRound size={17} />
+            {t.landing.testers.cta} <UserRound size={17} />
           </button>
         </div>
         <div className="landing-feature-card tester">
           <Star size={34} />
-          <h3>Tester workspace</h3>
-          {testerFeatures.map((feature) => (
+          <h3>{t.landing.testers.cardTitle}</h3>
+          {t.landing.testers.features.map((feature) => (
             <span key={feature}><CheckCircle2 size={18} /> {feature}</span>
           ))}
         </div>
@@ -209,28 +163,25 @@ export function LandingPage({ onOpenAuth, onOpenRegister, onOpenSignIn }) {
 
       <section className="landing-split-section reverse" id="for-clients">
         <div>
-          <span className="landing-section-kicker">For clients</span>
-          <h2>Launch structured beta tests without managing everything manually.</h2>
-          <p>
-            Clients get a focused dashboard for tasks, applicants, reports, and
-            payments, so feedback stays connected to the product work.
-          </p>
+          <span className="landing-section-kicker">{t.landing.clients.kicker}</span>
+          <h2>{t.landing.clients.title}</h2>
+          <p>{t.landing.clients.text}</p>
           <button className="landing-primary-button" onClick={() => onOpenRegister("client")} type="button">
-            Start as client <UsersRound size={17} />
+            {t.landing.clients.cta} <UsersRound size={17} />
           </button>
         </div>
         <div className="landing-feature-card client">
           <Send size={34} />
-          <h3>Client dashboard</h3>
-          {clientFeatures.map((feature) => (
+          <h3>{t.landing.clients.cardTitle}</h3>
+          {t.landing.clients.features.map((feature) => (
             <span key={feature}><CheckCircle2 size={18} /> {feature}</span>
           ))}
         </div>
       </section>
 
       <section className="landing-section" id="how-it-works">
-        <h2>How it works</h2>
-        <p>Simple process. Better results.</p>
+        <h2>{t.landing.how.title}</h2>
+        <p>{t.landing.how.subtitle}</p>
         <div className="landing-steps">
           {processSteps.map((step, index) => (
             <React.Fragment key={step.title}>
@@ -263,20 +214,17 @@ export function LandingPage({ onOpenAuth, onOpenRegister, onOpenSignIn }) {
 
       <section className="landing-pricing" id="pricing">
         <div className="landing-pricing-copy">
-          <span className="landing-section-kicker">Pricing</span>
-          <h2>Simple marketplace pricing for both sides.</h2>
-          <p>
-            BetaHub keeps the model clear: clients fund approved work, testers
-            get paid for completed reports, and platform fees stay visible.
-          </p>
+          <span className="landing-section-kicker">{t.landing.pricing.kicker}</span>
+          <h2>{t.landing.pricing.title}</h2>
+          <p>{t.landing.pricing.text}</p>
         </div>
         <div className="landing-price-card">
           <CreditCard size={34} />
-          <h3>Pay per approved task</h3>
-          <strong>Flexible</strong>
-          <p>No subscription required for the prototype flow. Create a task, choose testers, approve reports, and pay.</p>
+          <h3>{t.landing.pricing.cardTitle}</h3>
+          <strong>{t.landing.pricing.price}</strong>
+          <p>{t.landing.pricing.cardText}</p>
           <button className="landing-primary-button" onClick={onOpenRegister} type="button">
-            Get started
+            {t.common.getStarted}
           </button>
         </div>
       </section>
@@ -285,11 +233,28 @@ export function LandingPage({ onOpenAuth, onOpenRegister, onOpenSignIn }) {
         className="landing-scroll-top"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         type="button"
-        aria-label="Scroll to top"
+        aria-label={t.landing.scrollTop}
       >
         <ArrowUp size={24} />
       </button>
     </main>
+  );
+}
+
+function LanguageSwitch({ language, onLanguageChange }) {
+  return (
+    <div className="language-switch" aria-label="Language">
+      {Object.entries(languages).map(([key, meta]) => (
+        <button
+          className={language === key ? "active" : ""}
+          key={key}
+          onClick={() => onLanguageChange(key)}
+          type="button"
+        >
+          {meta.short}
+        </button>
+      ))}
+    </div>
   );
 }
 

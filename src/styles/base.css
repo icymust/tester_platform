@@ -33,6 +33,32 @@ button {
   cursor: pointer;
 }
 
+.language-switch {
+  display: inline-grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid #dfe3ef;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.language-switch button {
+  min-width: 38px;
+  min-height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #435078;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.language-switch button.active {
+  background: #2630ea;
+  color: #ffffff;
+}
+
 .hero {
   display: flex;
   flex-direction: column;
